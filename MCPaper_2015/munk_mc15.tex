@@ -55,13 +55,15 @@
 \begin{abstract}
 The \ce{^{40}Ar}/\ce{^{39}Ar} radiometric dating technique is an attractive option for future martian age-dating applications. However, in-situ \ce{^{40}Ar}/\ce{^{39}Ar} radiometric dating on Mars presents unique challenges to the design of a device capable of achieving sufficient precision on geological samples obtained on the Martian surface. For this application, a fast neutron source with a low thermal neutron flux is ideal for inducing the \ce{^{39}K}(n,p)\ce{^{39}Ar} reaction with few competing reactions that require age-correction factors. This paper explores the design of a neutron emitting device specifically for in-situ geochronological applications on Mars. We have determined that the most feasible design is likely a \ce{^{252}Cf} spontaneous fission source shielded with layered polyethylene and a strong thermal neutron absorber. Although boosting options--induced fission sources, ($\alpha$,n)--are available, they do not provide sufficient neutron multiplicity to justify the increased mass of the device. Furthermore, shielding the rover from the neutron source will likely comprise the largest fractional mass of the device, which will be reduced by shielding only a fractional solid angle of the source. While we have determined that it is possible to design such a neutron source, there will also be other instrumentation competing for a mass fraction of the Rover instrument payload. The addition of this instrumentation may make it difficult to design a device that achieves the required mass and fluence limitations for a future mission.   
 
-\emph{Key Words}: Fisson Sources, \ce{^{40}Ar}/\ce{^{39}Ar} Geochronology, Mars
+\emph{Key Words}: Fisson Sources, argon/argon Geochronology, Mars
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
-One of the goals of the future rover missions includes determining the age of Mars. Current efforts on this front have been focused on utilizing the \ce{^{40}K}/\ce{^{40}Ar} method (henceforth referred to as the K/Ar method) \cite{farley_situ_2014,farley_double-spike_2013,cassata_situ_2014}. This method is relies upon the fact that \ce{^{40}K} decays to \ce{^{40}Ar}. Assuming that at the time of formation there is no argon in the sample (a good assumption, as the gas thermodynamically driven to diffuse out of the molten rock), an age can be calculated with this parent-daughter ratio \cite{mcdougall_geochronology_1999}. This method is not without its drawbacks, though. To count the relative abundances of \ce{^{40}K} and \ce{^{40}Ar}, separate processes are required to isolate each element, so two samples are required. Additionally, the abundance counts for each element are an average across each crystal. If the sample has a complex thermal history, the gaseous argon is likely to have diffused to the crystal boundaries during each thermal event, which can skew the age.  
+One of the goals of the future rover missions includes determining the age of Mars. Current efforts on this front have been focused on using the \ce{^{40}K}/\ce{^{40}Ar} method (henceforth referred to as the K/Ar method) \cite{farley_situ_2014,farley_double-spike_2013,cassata_situ_2014}. This method relies upon the fact that \ce{^{40}K} decays to \ce{^{40}Ar}. Assuming that at the time of formation there is no argon in the sample (a good assumption, as the gas thermodynamically driven to diffuse out of the molten rock), an age can be calculated with this parent-daughter ratio \cite{mcdougall_geochronology_1999}. This method is not without its drawbacks though. To count the relative abundances of \ce{^{40}K} and \ce{^{40}Ar}, separate processes are required to isolate each element, so two samples are required. Additionally, the abundance counts for each element are an average across each crystal.
+%crystal?
+ If the sample has a complex thermal history, the gaseous argon is likely to have diffused to the crystal boundaries during each thermal event, which can skew the age.  
 
 McDougall \cite{mcdougall_geochronology_1999}
 Farley age of Mars \cite{farley_situ_2014}
@@ -69,9 +71,21 @@ Farley K-Ar description for rover \cite{farley_double-spike_2013}
 Li paper on lunar sources \cite{li_evaluation_2011}
 Cassata \cite{cassata_situ_2014}
 
-The \ce{^{40}Ar}/\ce{^{39}Ar} method for evaluating the age of geological samples is attractive for a number of reasons: (1) it reveals information about the thermal history of the sample, (2) potassium is readily abundant in much of the Martian surface so acceptable counting statistics are achievable on many potential samples, and (3) it is a well-understood method with a large experience base. 
+% Need to briefly describe ar-ar  method before you talk about why it's attractive.
+The \ce{^{40}Ar}/\ce{^{39}Ar} method for evaluating the age of geological samples is attractive for a number of reasons: (1) it reveals information about the thermal history of the sample, (2) potassium is readily abundant in much of the Martian surface, so acceptable counting statistics are achievable on many potential samples, and (3) it is a well-understood method with a large experience base. 
 
+The remainder of this paper will discuss ... Section \ref{sec:design} covers the details of the device design. The feasibility of device configurations is discussed in Section \ref{sec:feasibility}, and future work in Section \ref{sec:future}. Finally, concluding remarks are made in Section \ref{sec:conclusions}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Device Design}
+\label{sec:design}
+
+Add an introductory statement about what you need to achieve in the device design and why (list below). \\Next discuss a little bit about the approach and strategy (how did you get to the things in the picture?). \\ Describe what calculations you did.
+
+[INCLUDE] flux requirements\\
+temperature requirements\\
+neutron energy limitations\\
+competing reactions
 
 A neutron emitting device that is optimized for in-situ irradiation and geochronological analysis will have a number of components. For the irradiation, a source producing a sufficiently high fast neutron flux
 
@@ -80,33 +94,34 @@ Complete device designs were simulated with MCNP5~\cite{brown_mcnp_2002}. Severa
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.5\textwidth]{Geometries.png}
-  \caption{Configurations of devices for in-situ \ce{^{40}Ar}/\ce{^{39}Ar} geochronology. (a) A simple point source with a spherical shield/reflector, (b) a point source with spherical boosting material surrounded by a shield/reflector, (c) cylindrical assembly with centrally located point source surrounded by boosting rods or rotatable boosting drums and shield/reflector.}
+  \caption{Configurations of devices for in-situ \ce{^{40}Ar}/\ce{^{39}Ar} geochronology. (a) A simple point source with a spherical shield/reflector, (b) a point source with spherical boosting material surrounded by a shield/reflector, (c) cylindrical assembly with centrally-located point source surrounded by boosting rods or rotatable boosting drums and shield/reflector.}
   \label{fig:geometries}
 \end{figure}
 
-[INCLUDE] flux requirements
-temperature requirements
-neutron energy limitations
-competing reactions
+The authors did not consider compact fusion sources, which have been considered for terrestrial \ce{^{40}Ar}/\ce{^{39}Ar} geochronology \cite{renne_application_2005}, as they are not mass-feasible for this application. Furthermore, we did not consider critical configurations of the device, as the device will be irradiating the sample for hundreds of days at a time and a system to compensate for reactivity feedback and other physical effects will add unnecessary complexity to an already inflexible design criteria. Transition sentence introducing the remainder of the section.
 
-
-The authors did not consider compact fusion sources, which have been considered for terrestrial \ce{^{40}Ar}/\ce{^{39}Ar} geochronology \cite{renne_application_2005}, as they are not mass-feasible for this application. Furthermore we did not consider critical configurations of the device, as the device will be irradiating the sample for hundreds of days at a time and a system to compensate for reactivity feedback and other physical effects will add unnecessary complexity to an already inflexible design criteria. 
 
 \subsection{Neutron Source}
 
-A number of neutron source options were considered. Isotopes decaying by some probability of spontaneous fission offer a predictable neutron source flux with a sufficiently high quantity of fast neutrons. However, these sources also decay over time, so sample irradiation times will increase over the lifetime of the device to achieve the same fluence. Passive capture sources, like $\alpha$,n reactions, are attractive because two elements are required to create neutrons, which could mean that source strength could be user-controlled, prolonging the life of the neutron source, and consequently the entire device. Boosting material offers similar benefits to the latter, and can be chosen to maximize fast neutron creation.   
+A number of neutron source options were considered. Isotopes decaying by some probability of spontaneous fission offer a predictable neutron source flux with a sufficiently high quantity of fast neutrons. However, these sources also decay over time, so sample irradiation times will increase over the lifetime of the device to achieve the same fluence. Passive capture sources, like ($\alpha$,n) reactions, are attractive because two elements are required to create neutrons. This could mean source strength could be user-controlled, prolonging the life of the neutron source and, consequently, the entire device. Boosting material offers similar benefits to the latter and can be chosen to maximize fast neutron creation.   
 
 \subsubsection{Passive fission sources}
 
-Table \ref{tab:fisssource} compares the total mass and heat output for a number of different spontaneous fission isotopes. This was calculated with existing fission yield data in the literature~\cite{england_evaluation_1995, axton_neutron_1985}.
-This is illustrated in Table \ref{tab:fisssource}, which highlights the differences between many elements decaying by spontaneous fission. No isotope seems to completely satisfy all of the requirements of the passive fission sources. Some have long half lives but require significant mass. Others create too much heat and will cause a premature release of natural and radiogenic argon. \ce{^{252}Cf} appears to most completely satisfy the heat output and mass requirements, while also having a reasonably long half life. \ce{^{252}Cf} has the added benefit of a broad user experience in its generation and distribution \cite{martin_production_2000} and a slightly faster neutron energy spectrum than that of \ce{^{235}U} \cite{hjalmar_energy_1955}. Using \ce{^{252}Cf} as the sole neutron source in the device does pose some disadvantages: the device lifetime will likely not exceed the lifetime of the Mars rover as the half life is quite short, and it will take several years in a specialized reactor to produce enough \ce{^{252}Cf} to supply the source requirement desired for these purposes. For all MCNP5 simulations including this fission source, a source definition with a watt fission spectrum reflecting \ce{^{252}Cf} was used \cite[Appendix~C]{valentine_mcnp-dsp_1997}. 
+Table \ref{tab:fisssource} compares the total mass and heat output for a number of different spontaneous fission isotopes (SF BR is spontaneous fission branch ratio). This was calculated with existing fission yield data in the literature~\cite{england_evaluation_1995, axton_neutron_1985}.
+%This is illustrated in Table \ref{tab:fisssource}, which highlights the differences between many elements decaying by spontaneous fission. 
+No isotope seems to completely satisfy all of the requirements of the passive fission sources.
+% but you haven't told us what those are?
+ Some have long half lives but require significant mass. Others create too much heat and will cause a premature release of natural and radiogenic argon. \ce{^{252}Cf} appears to most closely satisfy the heat output and mass requirements while also having a reasonably long half life. \ce{^{252}Cf} has the added benefit of broad user experience \cite{martin_production_2000} and a slightly faster neutron energy spectrum than that of \ce{^{235}U} \cite{hjalmar_energy_1955}. However, using \ce{^{252}Cf} as the sole neutron source in the device does pose some disadvantages: the device lifetime is unlikely to exceed the lifetime of the Mars rover as the half life is quite short, and it will take several years in a specialized reactor to produce enough \ce{^{252}Cf} to supply the source requirement desired for these purposes. 
+
+For all MCNP5 simulations a source definition with a watt fission spectrum reflecting \ce{^{252}Cf} was used \cite[Appendix~C]{valentine_mcnp-dsp_1997}. 
+% This sentence should go where you describe your calculations.
 
  \begin{table}
   \centering
-  \caption{Passive Neutron Sources Decaying by Spontaneous Fission}
+  \caption{Passive neutron sources decaying by spontaneous fission}
   \begin{tabular}{l|ccccc}
     \toprule
-    Source & Mass for $10^{11}$ $\frac{n}{sec}$ & $\frac{n}{sec-mg}$ & $t_{1/2}$ & SF Branch Ratio (\%) & Heat Output ($\frac{Watts}{10^{11} source}$) \\
+    Source & Mass for $10^{11}$ $\frac{n}{sec}$ & $\frac{n}{sec-mg}$ & $t_{1/2}$ & SF BR (\%) & Heat Out ($\frac{Watts}{10^{11} source}$) \\
     \midrule
     \ce{^{252}Cf}& \num{43} mg & \num{2.3e9} & \num{2.645} years & \num{3.82} & \num{1.43} \\
     \ce{^{250}Cf} & \num{9.5} g & \num{1.1e10} & \num{13.08} years & \num{0.08} & \num{31}  \\
@@ -177,9 +192,13 @@ A composite shield option designed to moderate and then absorb neutrons is likel
 
 A device optimized for the in-situ irradiation and age determination of geological samples requires an instrument payload in addition to the neutron emitting device. This will include, but is not limited to: a drilling mechanism, a mass spectrometer, and a system with which to heat up the sample to perform step-heating. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Feasibility of Device Configurations}
+\label{sec:feasibility}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Future Work}
+\label{sec:future}
 
 Thus far, the neutronic feasiblity of this device design has been explored. However, a number of other considerations must also be accounted for in greater detail in future analyses. Heat transfer calculations should be performed to ensure that the sample temperature will not exceed 200\celsius, which will lead to premature release of trapped argon in the sample. This calculation is contingent upon concrete knowledge of the design materials and geometry, and could be performed with some finite element heat transfer package. \\
 
@@ -190,6 +209,7 @@ Further optimization on the minimization of shield mass and volume will be benef
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}
+\label{sec:conclusions}
 
 A compact neutron source is an attractive candidate to induce the necessary reactions for  \ce{^{40}Ar}/\ce{^{39}Ar}  geochronological applications on future, unmanned, missions to extra-terrestrial bodies where sample return is neither feasible nor likely. However, the vast range of overall dose and dose rate limits for existing  rover designs lead to ambiguity in shielding designs, making optimization difficult. Furthermore, the longevity of the neutron source is likely to be compromised with the use of exclusively the 252Cf fission neutron source. This could be avoided with boosting material, but that would also require some moderation around all 4$\pi$ solid angles of the boosting material to achieve increased efficiency in neutron-induced fission. The addition of both shielding material and enough boosting material to achieve a high enough effective multiplication factor renders this configuration likely unfeasible. While the extent of this paper is dedicated to the analysis and design of a neutron source that can produce an acceptable fluence on reasonable timescales, the device designed for geochronological applications will include an additional instrument payload. These instruments, such as a mass spectrometer, can be optimized to have a greater abundance sensitivity. This could offset the loss of precision from a lower flux neutron source, but will undoubtedly come at a greater mass expense. Prioritizing which of these is more important will be imperative in moving forward with future designs. The total mass threshold could be increased if the RTG on the rover could be replaced with the neutron device. This would require a much more sophisticated heat removal and power conversion system than we have proposed for the device described in this paper. Furthermore, the need of a small neutron emitting device could be avoided if other space reactor concepts are considered for future missions to Mars. In this case, a system not unlike the setup at the Oregon State TRIGA reactor could be designed for sample irradiation. 
 
