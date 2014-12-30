@@ -90,9 +90,9 @@ competing reactions
 
 A neutron emitting device that is optimized for in-situ irradiation and geochronological analysis will have a number of components. For the irradiation, a source producing a sufficiently high fast neutron flux
 
-Complete device designs were simulated with MCNP5~\cite{brown_mcnp_2002}. Several geometries were considered (Fig. \ref{fig:geometries}). 
+Complete device designs were simulated with MCNP5~\cite{brown_mcnp_2002}. Several geometries were considered (Fig.\ \ref{fig:geometries}). 
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=0.5\textwidth]{Geometries.png}
   \caption{Configurations of devices for in-situ \ce{^{40}Ar}/\ce{^{39}Ar} geochronology. (a) A simple point source with a spherical shield/reflector, (b) a point source with spherical boosting material surrounded by a shield/reflector, (c) cylindrical assembly with centrally-located point source surrounded by boosting rods or rotatable boosting drums and shield/reflector.}
@@ -146,20 +146,20 @@ This is substantially more than the current $\alpha$ particle source rate from t
 
 \subsubsection{Boosting material}
 
-The boosting material considered loosely falls into two categories: induced fission neutron sources, and neutron capture neutron sources. Both of these sources require an additional driving neutron source to produce neutrons. Induced fission sources can offer substantial multiplicitave boosting if the device configuration is near critical.  Much of the previous work on determining the minimum critical mass of induced-fission sources  was done with homogenized layers of fissionable material and moderator to enhance thermally-induced fission neutrons \cite{karni_semi-automated_keff,karni_smores_2003,goluoglu_smoresnew_2002}. This is not an attractive option for this application since a large fraction of the neutron flux will be thermal and thus unusable for the \ce{^{39}K}(n,p)\ce{^{39}Ar} reaction. Of the induced fission sources, blah blah blah were considered, as illustrated in Fig. \ref{fig:boosters}.
+The boosting material considered loosely falls into two categories: induced fission neutron sources, and neutron capture neutron sources. Both of these sources require an additional driving neutron source to produce neutrons. Induced fission sources can offer substantial multiplicitave boosting if the device configuration is near critical.  Much of the previous work on determining the minimum critical mass of induced-fission sources  was done with homogenized layers of fissionable material and moderator to enhance thermally-induced fission neutrons \cite{karni_semi-automated_keff,karni_smores_2003,goluoglu_smoresnew_2002}. This is not an attractive option for this application since a large fraction of the neutron flux will be thermal and thus unusable for the \ce{^{39}K}(n,p)\ce{^{39}Ar} reaction. Of the induced fission sources, blah blah blah were considered, as illustrated in Fig.\ \ref{fig:boosters}.
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=4.5in]{Boosters.png}
   \caption{Induced fission neutron boosters}
   \label{fig:boosters}
 \end{figure}
 
-Of the neutron capture sources, the most attractive appeared to be the (n,2n) and (n,3n) fast neutron reactions in beryllium metal. A variant of Fig. \ref{fig:geometries} (?) was simulated with MCNP5, with a \ce{^{252}Cf} point source surrounded by a spherical shell of \ce{^{9}Be} metal, shielded with a premadex shell (what's that?).
-To find the best design, the thickness of the \ce{^{9}Be} shell was varied; Fig. \ref{fig:beboosters} summarizes these results. As the thickness of \ce{^{9}Be} increases so does the flux boost, peaking at a $\sim$10\% boost with an 8.5cm shell around the point source. Although this boost is not negligible, it is not worth the added mass of $\sim$5.6kg, which would only offset a short increment of \ce{^{252}Cf} decay losses. %The beryllium may at first seem attractive as an ($\alpha$,n) source, but the flux boost from this reaction is several orders of magnitude less than the boosting from the (n,2n) and (n,3n) reactions, so it is not included.  
+Of the neutron capture sources, the most attractive appeared to be the (n,2n) and (n,3n) fast neutron reactions in beryllium metal. A variant of Fig.\ \ref{fig:geometries} (?) was simulated with MCNP5, with a \ce{^{252}Cf} point source surrounded by a spherical shell of \ce{^{9}Be} metal, shielded with a premadex, hydrogenous material enriched in \ce{^{6}Li}, shell (does that need a citation?).
+To find the best design, the thickness of the \ce{^{9}Be} shell was varied; Fig.\ \ref{fig:beboosters} summarizes these results. As the thickness of \ce{^{9}Be} increases so does the flux boost, peaking at a $\sim$10\% boost with an 8.5cm shell around the point source. Although this boost is not negligible, it is not worth the added mass of $\sim$5.6kg, which would only offset a short increment of \ce{^{252}Cf} decay losses. %The beryllium may at first seem attractive as an ($\alpha$,n) source, but the flux boost from this reaction is several orders of magnitude less than the boosting from the (n,2n) and (n,3n) reactions, so it is not included.  
 % I don't think you need the last sentence - if you want to keep it in reword since it's a little confusing
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=4.5in]{Be_boost.png}
   \caption{Boosting the neutron flux with beryllium}
@@ -168,18 +168,21 @@ To find the best design, the thickness of the \ce{^{9}Be} shell was varied; Fig.
 
 \subsection{Neutron Shield Design}
 
-The most basic shield design is surrounding a point source of neutrons with a \ce{^{252}Cf} energy spectrum with a spherical shell of shield material. Figure \ref{fig:basics} illustrates the reduction in source strength as a function of radial distance away from the point source for a number of shield material options. Premadex is a hydrogenous material enriched in \ce{^{6}Li}. 
+The most basic shield design is surrounding a point source of neutrons with a \ce{^{252}Cf} energy spectrum with a spherical shell of shield material. Figure \ref{fig:basics} illustrates the reduction in source strength as a function of radial distance away from the point source for a number of shield material options. (say what the materials you use are; I have no idea what the things in the legend are). The hydrogenous materials perform far better than the thermal neutron-absorbing metals, which is expected since without hydrogenous materials there is no moderator to slow neutrons to thermal energies where they would be absorbed.
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=4.5in]{Basics.png}
   \caption{Performance comparison for various shield material options}
   \label{fig:basics}
 \end{figure}
 
-A composite shield option designed to moderate and then absorb neutrons is likely the best option to reduce the radial thickness of required shield material. As illustrated in \ref{fig:basics}, the hydrogenous materials perform far better than the thermal neutron-absorbing metals, which should be expected as there is no moderator to maximize absorption in the latter. The thermal neutron absorbers, like Cd or Gd are well suited for neutron absorption of a predominantly thermal neutron energy spectrum.  fission spectrum of \ce{^{252}Cf} is moderated with a lighter atomic mass material and then a thin foil of Cd or Gd could be used to remove the peak thermal neutron flux. For polyethylene, Fig. \ref{fig:polychar} indicates that the maxiumum thermal neutron flux fraction occurs ~ 15-20cm away from the point source. For premadex this location is at ~12-15cm (\ref{fig:premchar}). However, the polyethylene has a much greater specific linear scattering efficiency, so foil placement could still be effective if placed before the peak thermal flux. 
+Based on these observations, a composite shield designed to moderate and then absorb neutrons is likely the best option to reduce the radial thickness of required shield material.  The idea is that the fission spectrum of \ce{^{252}Cf} should be moderated with a lighter atomic mass material, and then a thin foil of Cd or Gd, which absorb thermal neutrons effectively, would be used to remove the peak thermal neutron flux. 
+% These two sets of thoughts aren't clearly connected. You need to relate the materials and the thicknesses to the design you're suggesting, and then end the paragraph with a concluding sentence.
 
-\begin{figure}[H]
+For polyethylene, Fig.\ \ref{fig:polychar} indicates that the maximum thermal neutron flux fraction occurs $\sim$15-20 cm away from the point source. For premadex, this location is at $\sim$12-15 cm (Fig.\ \ref{fig:premchar}). However, the polyethylene has a much greater specific linear scattering efficiency, so foil placement could still be effective if placed before the peak thermal flux. 
+
+\begin{figure}
 	\centering
 	\begin{subfigure}{0.49\textwidth}
 		\includegraphics[width=\textwidth]{Poly_char.png}
@@ -198,6 +201,7 @@ A composite shield option designed to moderate and then absorb neutrons is likel
 \subsection{Other Considerations}
 
 A device optimized for the in-situ irradiation and age determination of geological samples requires an instrument payload in addition to the neutron emitting device. This will include, but is not limited to: a drilling mechanism, a mass spectrometer, and a system with which to heat up the sample to perform step-heating. 
+%What does all of that mean?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Feasibility of Device Configurations}
@@ -206,19 +210,22 @@ A device optimized for the in-situ irradiation and age determination of geologic
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Future Work}
 \label{sec:future}
+% If you end up being tight on space, you can cut down this section to just briefly say that you need to consider other things. You could make it just one paragraph in conclusions.
+Thus far, the neutronic feasibility of this device design has been explored. However, a number of other considerations must also be accounted for in greater detail in future analyses. Heat transfer calculations should be performed to ensure that the sample temperature will not exceed 200\celsius, which would lead to premature release of trapped argon in the sample. This calculation is contingent upon concrete knowledge of the design materials and geometry, and could be performed with some finite element heat transfer package. 
 
-Thus far, the neutronic feasiblity of this device design has been explored. However, a number of other considerations must also be accounted for in greater detail in future analyses. Heat transfer calculations should be performed to ensure that the sample temperature will not exceed 200\celsius, which will lead to premature release of trapped argon in the sample. This calculation is contingent upon concrete knowledge of the design materials and geometry, and could be performed with some finite element heat transfer package. \\
-
-Furthermore, selecting a power source to provide sufficient energy with which to step heat the sample to acceptable temperatures will be important. The most recent K/Ar age of Mars was heated to 890\celsius \cite{farley_situ_2014}, which does not reach the temperatures usually required for complete sample step heating, ~1200\celsius \cite{mcdougall_geochronology_1999}. Powering a device to heat the sample to this temperature may temporarily disable the rover or even exceed current design limitations. However, both the \ce{^{40}Ar}/\ce{^{39}Ar}  and \ce{^{40}K}/\ce{^{40}Ar}  age calculations may be skewed without adequate heating. \\
+Furthermore, selecting a power source to provide sufficient energy with which to step heat the sample to acceptable temperatures will be important since both \ce{^{40}Ar}/\ce{^{39}Ar} and \ce{^{40}K}/\ce{^{40}Ar} age calculations may be skewed without adequate heating. The most recent K/Ar age sample from Mars was heated to 890\celsius \cite{farley_situ_2014}, which does not reach the temperatures usually required for complete sample step heating, $\sim$1200\celsius \cite{mcdougall_geochronology_1999}. Powering a device to heat the sample to this temperature may temporarily disable the rover or even exceed current design limitations. 
 
 The shielding analysis and optimization detailed in this paper was exclusively for neutron shielding. Future rovers will also have photon dose limits, which will require shielding to ensure that the electronics do not degrade at an unacceptable rate. The addition of thermal neutron absorbers in a composite shield option, like Cd or Gd, will produce high energy photons that may have adverse effects on the overall damage rate of the device. 
-Further optimization on the minimization of shield mass and volume will be beneficial to the overall device mass minimization. Should fissionable booster options be considered, it would also be ideal to minimize the boosting material mass to achieve a desired subcritical multiplication factor. Existing software to determine the minimize critical mass \cite{goluoglu_smoresnew_2002,karni_semi-automated_keff,karni_smores_2003} of systems and optimization of shield designs \cite{greenspan_material_1994,greenspan_swans:_2001} are available in the SCALE package \cite{bowman_scale_2003}. Utilization of this software in future design iterations would aid in the convergence to a realistic device design.  
+Further optimization to minimize shield mass and volume more explicitly will be beneficial. Should fissionable booster options be considered, it would also be ideal to minimize the boosting material mass to achieve the desired subcritical multiplication factor. %Existing software to determine the minimize critical mass \cite{goluoglu_smoresnew_2002,karni_semi-automated_keff,karni_smores_2003} of systems and optimize shield designs \cite{greenspan_material_1994,greenspan_swans:_2001} are available in the SCALE package \cite{bowman_scale_2003}. Using this software in future design iterations would aid in the convergence to a realistic device design.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}
 \label{sec:conclusions}
 
-A compact neutron source is an attractive candidate to induce the necessary reactions for  \ce{^{40}Ar}/\ce{^{39}Ar}  geochronological applications on future, unmanned, missions to extra-terrestrial bodies where sample return is neither feasible nor likely. However, the vast range of overall dose and dose rate limits for existing  rover designs lead to ambiguity in shielding designs, making optimization difficult. Furthermore, the longevity of the neutron source is likely to be compromised with the use of exclusively the 252Cf fission neutron source. This could be avoided with boosting material, but that would also require some moderation around all 4$\pi$ solid angles of the boosting material to achieve increased efficiency in neutron-induced fission. The addition of both shielding material and enough boosting material to achieve a high enough effective multiplication factor renders this configuration likely unfeasible. While the extent of this paper is dedicated to the analysis and design of a neutron source that can produce an acceptable fluence on reasonable timescales, the device designed for geochronological applications will include an additional instrument payload. These instruments, such as a mass spectrometer, can be optimized to have a greater abundance sensitivity. This could offset the loss of precision from a lower flux neutron source, but will undoubtedly come at a greater mass expense. Prioritizing which of these is more important will be imperative in moving forward with future designs. The total mass threshold could be increased if the RTG on the rover could be replaced with the neutron device. This would require a much more sophisticated heat removal and power conversion system than we have proposed for the device described in this paper. Furthermore, the need of a small neutron emitting device could be avoided if other space reactor concepts are considered for future missions to Mars. In this case, a system not unlike the setup at the Oregon State TRIGA reactor could be designed for sample irradiation. 
+A compact neutron source is an attractive candidate to induce the necessary reactions for  \ce{^{40}Ar}/\ce{^{39}Ar}  geochronological applications on future, unmanned, missions to extra-terrestrial bodies where sample return is neither feasible nor likely. However, the vast range of overall dose and dose rate limits for existing  rover designs lead to ambiguity in shielding designs, making optimization difficult. Furthermore, the longevity of the neutron source is likely to be compromised with the  exclusive use of a \ce{^{252}Cf} fission neutron source. The lifetime could be extended with boosting material, but that would require moderation of all 4$\pi$ solid angles of the boosting material to achieve increased efficiency in neutron-induced fission. The addition of both shielding material and enough boosting material to achieve a high enough effective multiplication factor renders this configuration likely unfeasible. 
+
+While the bulk of this paper is dedicated to the analysis and design of a neutron source that can produce an acceptable fluence on reasonable timescales, the device designed for geochronological applications will include an additional instrument payload. These instruments, such as a mass spectrometer, can be optimized to have a greater abundance sensitivity. This could offset the loss of precision from a lower flux neutron source, but will undoubtedly come at a greater mass expense. Prioritizing which of these is more important will be imperative in moving forward with future designs. The total mass threshold could be increased if the RTG on the rover could be replaced with the neutron device. This would require a much more sophisticated heat removal and power conversion system than we have proposed for the device described in this paper. Furthermore, the need of a small neutron emitting device could be avoided if other space reactor concepts are considered for future missions to Mars. In this case, a system not unlike the setup at the Oregon State TRIGA reactor could be designed for sample irradiation. 
+% Instead of this last paragraph, summarize what you discussed in the paper and end with your recommendations. You do this in the first paragraph, expand upon that--this last one feels like a digression.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Acknowledgments}
