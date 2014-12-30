@@ -65,13 +65,14 @@ One of the goals of the future rover missions includes determining the age of Ma
 %crystal?
  If the sample has a complex thermal history, the gaseous argon is likely to have diffused to the crystal boundaries during each thermal event, which can skew the age.  
 
-McDougall \cite{mcdougall_geochronology_1999}
-Farley age of Mars \cite{farley_situ_2014}
-Farley K-Ar description for rover \cite{farley_double-spike_2013}
-Li paper on lunar sources \cite{li_evaluation_2011}
+McDougall \cite{mcdougall_geochronology_1999}\\
+Farley age of Mars \cite{farley_situ_2014}\\
+Farley K-Ar description for rover \cite{farley_double-spike_2013}\\
+Li paper on lunar sources \cite{li_evaluation_2011}\\
 Cassata \cite{cassata_situ_2014}
 
-% Need to briefly describe ar-ar  method before you talk about why it's attractive.
+Need to briefly describe ar-ar  method before you talk about why it's attractive.
+
 The \ce{^{40}Ar}/\ce{^{39}Ar} method for evaluating the age of geological samples is attractive for a number of reasons: (1) it reveals information about the thermal history of the sample, (2) potassium is readily abundant in much of the Martian surface, so acceptable counting statistics are achievable on many potential samples, and (3) it is a well-understood method with a large experience base. 
 
 The remainder of this paper will discuss ... Section \ref{sec:design} covers the details of the device design. The feasibility of device configurations is discussed in Section \ref{sec:feasibility}, and future work in Section \ref{sec:future}. Finally, concluding remarks are made in Section \ref{sec:conclusions}.
@@ -137,25 +138,31 @@ For all MCNP5 simulations a source definition with a watt fission spectrum refle
 
 \subsubsection{Passive capture sources}
 
-Passive capture sources \cite{weise_neutron_1984,jacobs_energy_1983,marsh_high_1995} are those that generate neutrons by some capture reaction (excluding neutron capture, which is detailed in a subsequent section). Originally, these sources were attractive because separation of the element emitting the incident particle from the target would cease neutron production. The ability to "shut down" the neutron source would reduce the required neutron shielding to the mars rover (assuming dose limits are fluence dependent, and not dose rates) and only require that the rover is constantly shielded from $\alpha$ particles.  Additionally, the neutron energy spectrum from this reaction is relatively fast. However, these sources require homogenized mixing to supply the neutron flux defined previously. Furthermore, the total neutron production is on the order of neutrons per $10^6\:\alpha$ particles or less for most materials \cite{weise_neutron_1984,jacobs_energy_1983}.Consequently, for a $10^{11}$ neutron/second source, a roughly $10^{17}$ alpha source would be required. Despite their consideration as a source for in-situ \ce{^{40}Ar}/\ce{^{39}Ar} geochronology on lunar missions \cite{li_evaluation_2011}, a martian mission has significantly more strict mass and volume limitations. While it is possible to obtain an alpha source this large, the neutron source would either be of significant mass or with a short half-life. This is substantially more than the current $\alpha$ particle source rate from the RTG on Curiosity, and likely not a feasible option. 
+Passive capture sources \cite{weise_neutron_1984,jacobs_energy_1983,marsh_high_1995} are those that generate neutrons by some capture reaction (excluding neutron capture, which is detailed in a subsequent section). Originally, these sources were attractive because separation of the element emitting the incident particle from the target would cease neutron production. % I am unsure about what this sentence means?
+ The ability to "shut down" the neutron source would reduce the required neutron shielding for the Mars rover (assuming dose limits are fluence rather than dose rate dependent) and only require that the rover is constantly shielded from $\alpha$ particles.  Additionally, the neutron energy spectrum from this reaction is relatively fast. %However, these sources require homogenized mixing to supply the neutron flux defined previously.
+However, the total neutron production is on the order of a few  neutrons per $10^6\:\alpha$ particles per second or less for most materials \cite{weise_neutron_1984,jacobs_energy_1983}. Consequently, for a $10^{11}$ neutron/s source, a roughly $10^{17}$ $\alpha$/s source would be required. 
+% Why do we care about alphas? It seems like you're trying to argue that you would need too much mass - I think the alphas are distracting and you should talk more concretely about mass and half life. 
+This is substantially more than the current $\alpha$ particle source rate from the RTG on Curiosity. Despite considering passive capture sources for in-situ \ce{^{40}Ar}/\ce{^{39}Ar} geochronology on lunar missions \cite{li_evaluation_2011}, a martian mission has significantly tighter mass and volume limitations. Therefore, while it is possible to obtain an alpha source that is large enough from an emission standpoint, the neutron source would either be of significant mass, which will violate mission limits, or with a short half-life, which will not meet time requirements.
 
 \subsubsection{Boosting material}
 
-The boosting material considered loosely falls into two categories: induced fission neutron sources, and neutron capture neutron sources. Both of these sources require an additional driving neutron source to produce neutrons. Induced fission sources can opper substantial multiplicitave boosting if the device configuration is near critical.  Much of previous work on determining the minimum critical mass of induced-fission sources \cite{karni_semi-automated_keff,karni_smores_2003,goluoglu_smoresnew_2002} was done with homogenized layers of fissionable material and moderator to enhance thermally-induced fission neutrons. This is not an attractive option for this application, as a large fraction of the neutron flux will be thermal neutrons and thus unusuable for the \ce{^{39}K}(n,p)\ce{^{39}Ar} reaction. Of the induced fission sources, blah blah blah were considered, as illustrated in Fig. \ref{fig:boosters}.
+The boosting material considered loosely falls into two categories: induced fission neutron sources, and neutron capture neutron sources. Both of these sources require an additional driving neutron source to produce neutrons. Induced fission sources can offer substantial multiplicitave boosting if the device configuration is near critical.  Much of the previous work on determining the minimum critical mass of induced-fission sources  was done with homogenized layers of fissionable material and moderator to enhance thermally-induced fission neutrons \cite{karni_semi-automated_keff,karni_smores_2003,goluoglu_smoresnew_2002}. This is not an attractive option for this application since a large fraction of the neutron flux will be thermal and thus unusable for the \ce{^{39}K}(n,p)\ce{^{39}Ar} reaction. Of the induced fission sources, blah blah blah were considered, as illustrated in Fig. \ref{fig:boosters}.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=4.5in]{Boosters.png}
-  \caption{Induced fission neutron boosters.}
+  \caption{Induced fission neutron boosters}
   \label{fig:boosters}
 \end{figure}
 
-Of the neutron capture sources, the most attractive appeared to be the n,2n and n,3n fast neutron reactions off of beryllium metal. A variant of figure XXX was simulated with MCNP5, with a point source of \ce{^{252}Cf} surrounded by a spherical shell of \ce{^{9}Be} metal, sheilded with a premadex shell. The thickness of the \ce{^{9}Be} shell was increased. Fig. \ref{fig:beboosters} summarizes these results. As the thickness of  \ce{^{9}Be} increases, so does the flux boost, maximizing at a ~10\% boost with an 8.5cm shell around the point source. Although this boost is not negligible, it is not worth the added mass of ~5.6kg, which would only offset a short increment of \ce{^{252}Cf} decay losses. The beryllium may at first seem attractive as an $\alpha$,n source, but the flux boost from this reaction is several orders of magnitude less than the boosting from the n,2n and n,3n reactions, so it is not included.  
+Of the neutron capture sources, the most attractive appeared to be the (n,2n) and (n,3n) fast neutron reactions in beryllium metal. A variant of Fig. \ref{fig:geometries} (?) was simulated with MCNP5, with a \ce{^{252}Cf} point source surrounded by a spherical shell of \ce{^{9}Be} metal, shielded with a premadex shell (what's that?).
+To find the best design, the thickness of the \ce{^{9}Be} shell was varied; Fig. \ref{fig:beboosters} summarizes these results. As the thickness of \ce{^{9}Be} increases so does the flux boost, peaking at a $\sim$10\% boost with an 8.5cm shell around the point source. Although this boost is not negligible, it is not worth the added mass of $\sim$5.6kg, which would only offset a short increment of \ce{^{252}Cf} decay losses. %The beryllium may at first seem attractive as an ($\alpha$,n) source, but the flux boost from this reaction is several orders of magnitude less than the boosting from the (n,2n) and (n,3n) reactions, so it is not included.  
+% I don't think you need the last sentence - if you want to keep it in reword since it's a little confusing
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=4.5in]{Be_boost.png}
-  \caption{Boosting the neutron flux with Beryllium.}
+  \caption{Boosting the neutron flux with beryllium}
   \label{fig:beboosters}
 \end{figure}
 
