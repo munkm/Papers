@@ -12,6 +12,8 @@
 \usepackage{gensymb}
 \usepackage{float}
 \usepackage{subcaption}
+% \usepackage[demo]{graphicx} % the demo option is just for the example
+% \usepackage{capt-of}
 \usepackage[exponent-product=\cdot]{siunitx}
 \usepackage[colorlinks,breaklinks]{hyperref}
 \hypersetup{linkcolor=black, citecolor=black, urlcolor=black}
@@ -52,7 +54,7 @@
 \maketitle
 
 \begin{abstract}
-The \ce{^{40}Ar}/\ce{^{39}Ar} radiometric dating technique is an attractive option for future extraterrestrial geochronology applications. However, \textit{in situ} \ce{^{40}Ar}/\ce{^{39}Ar} radiometric dating on Mars presents unique challenges to the design of a device capable of achieving sufficient precision on geological samples obtained on the Martian surface. For this application, a fast neutron source with a low thermal neutron flux is ideal for inducing the \ce{^{39}K}(n,p)\ce{^{39}Ar} reaction with few competing reactions that require age-correction factors. This paper explores the design of a neutron emitting device specifically for in-situ geochronological applications on extraterrestrial surfaces. We have determined that a feasible design is likely to include a \ce{^{252}Cf} spontaneous fission source shielded by polyethylene layered with a strong thermal neutron absorber. Although boosting options--induced fission sources, ($\alpha$,n)--are available, they do not provide sufficient neutron multiplicity to justify the increased mass of the device. Furthermore, shielding the rover from the neutron source will likely comprise the largest fractional mass of the device, which will be reduced by shielding only a small solid angle of the source. While we have determined that it is possible to design such a neutron source, there will also be other instrumentation competing for a mass fraction of the Rover instrument payload. This may make it difficult to design a device that achieves the required mass and fluence limitations for a future mission. However, this work provides a realistic path forward in determining a future workable design. 
+The \ce{^{40}Ar}/\ce{^{39}Ar} radiometric dating technique is an attractive option for future extraterrestrial geochronology applications. However, \textit{in situ} \ce{^{40}Ar}/\ce{^{39}Ar} radiometric dating on Mars presents unique challenges to the design of a device capable of achieving sufficient precision on geological samples obtained on the Martian surface. For this application, a fast neutron source with a low thermal neutron flux is ideal for inducing the \ce{^{39}K}(n,p)\ce{^{39}Ar} reaction with few competing reactions that require age-correction factors. This paper explores the design of a neutron emitting device specifically for \textit{in situ} geochronological applications on extraterrestrial surfaces. We have determined that a feasible design is likely to include a \ce{^{252}Cf} spontaneous fission source shielded by polyethylene layered with a strong thermal neutron absorber. Although boosting options--induced fission sources, ($\alpha$,n)--are available, they do not provide sufficient neutron multiplicity to justify the increased mass of the device. Furthermore, shielding the rover from the neutron source will likely comprise the largest fractional mass of the device, which will be reduced by shielding only a small solid angle of the source. While we have determined that it is possible to design such a neutron source, there will also be other instrumentation competing for a mass fraction of the Rover instrument payload. This may make it difficult to design a device that achieves the required mass and fluence limitations for a future mission. However, this work provides a realistic path forward in determining a future workable design. 
 
 \emph{Key Words}: Fisson Sources, Argon/Argon Geochronology, Mars
 \end{abstract}
@@ -90,7 +92,7 @@ Several geometries that initially appeared to satisfy these requirements were pr
 \begin{figure}
   \centering
   \includegraphics[width=0.5\textwidth]{Geometries.png}
-  \caption{Configurations of devices for in-situ \ce{^{40}Ar}/\ce{^{39}Ar} geochronology. (a) A point source with a spherical shield/reflector, (b) a point source with spherical or cylindrical boosting material surrounded by a shield/reflector, (c) cylindrical assembly with centrally-located point source surrounded by boosting rods or rotatable boosting drums and shield/reflector.}
+  \caption{Configurations of devices for \textit{in situ} \ce{^{40}Ar}/\ce{^{39}Ar} geochronology. (a) A point source with a spherical shield/reflector, (b) a point source with spherical or cylindrical boosting material surrounded by a shield/reflector, (c) cylindrical assembly with centrally-located point source surrounded by boosting rods or rotatable boosting drums and shield/reflector.}
   \label{fig:geometries}
 \end{figure}
 
@@ -98,7 +100,7 @@ To summarize, a neutron emitting device designed to irradiate samples for Ar/Ar 
 
 The subsequent subsections detail the design options analyzed for the device. Section \ref{sec:sources} elaborates on the various sources that could be used to supply neutrons for the device. This includes passive fission sources, or sources undergoing fission without an induced reaction; passive capture sources, or sources that supply neutrons by undergoing a capture of an alpha particle; and boosting materials, or materials that require a capture of a neutron to induce fission or produce neutrons. Section \ref{sec:shields} covers the shield material selection and geometric configurations that were considered for this application. Last, section \ref{sec:others} covers non-neutronic design details for Ar/Ar geochronology applications in addition to explaining the rationale behind the neutron sources that were not considered for this study. 
 
-All neutron transport simulations were done using MCNP5~\cite{brown_mcnp_2002}. For design configurations using \ce{^{252}Cf}, a point source with watt fission energy spectrum was used. The total number of particles run in fixed-source problems varied, but were chosen such that any result had <2\% error. For criticality calculations (used for some boosting materials), the kcode card was used with 5,000 particles per generation, skipping 50 generations, and using 200 generations. For shielding calculations, the decrement in the source strength as a function  of depth into the shield was calculated with a surface current, or f1 tally ,and angular binning to count the outgoing particles in each region of the shield.
+All neutron transport simulations were done using MCNP5~\cite{brown_mcnp_2002}. For design configurations using \ce{^{252}Cf}, a point source with watt fission energy spectrum was used. The total number of particles run in fixed-source problems varied, but were chosen such that any result had <2\% error, for some cases. For criticality calculations (used for some boosting materials), the kcode card was used with 5,000 particles per generation, skipping 50 generations, and using 200 generations. For shielding calculations, the decrement in the source strength as a function  of depth into the shield was calculated with a surface current, or f1 tally ,and angular binning to count the outgoing particles in each region of the shield.
 %I don't know what the decrement in the flux means? Do you mean the outgoing flux to figure out the flux reduction?
 %I added some clarifying words. Maybe these 
  Last, reactions in non-critical boosting materials (Fig. \ref{fig:beboosters}) were calculated with a track-length estimate of cell flux, or f4 tally, and reaction rate multipliers for that cell.
@@ -156,7 +158,35 @@ Of the neutron capture sources, the most attractive appeared to be the (n,2n) an
 % Yep, I'm looking for a citation for Premadex$^\circledR$ :)
 To find the best design, the thickness of the \ce{^{9}Be} shell was varied; Fig.\ \ref{fig:beboosters}, Beryllium Booster Effectiveness, summarizes these results. As the thickness of \ce{^{9}Be} increases so does the flux boost, peaking at a $\sim$10\% boost with an 8.5 cm shell around the point source. Although this boost is not negligible, it is not considered to be worth the additional mass of $\sim$5.6 kg, given that it would only offset a short increment of \ce{^{252}Cf} decay losses. 
 
-\begin{figure}
+%\begin{figure}
+%  \centering
+%  \begin{subfigure}{.75\textwidth}
+%    \centering
+%    \includegraphics[width=\textwidth]{Be_boost.png}
+%  \end{subfigure}
+%  \begin{subfigure}{.10\textwidth}
+%    \centering
+    %\captionof{table}{Mass for given beryllium thickness}%
+%    \begin{tabular}{cc}
+%      \toprule 
+%      Thickness (cm) & Mass (kg) \\
+%      \midrule
+%      \num{0.5} & \num{6.8e-3} \\
+%      \num{1} & \num{2.5e-2} \\
+%      \num{3} & \num{3.3e-1} \\
+%      \num{5} & \num{1.3e0} \\
+%      \num{7} & \num{3.3e0} \\
+%      \num{8.5} & \num{5.6e0} \\
+%      \bottomrule
+      % \caption{Mass for given beryllium thickness}
+%    \end{tabular}
+%  \end{subfigure}
+%  \caption{Boosting the neutron flux with beryllium}
+%  \label{fig:beboosters}
+%\end{figure}
+
+
+ \begin{figure}
   \centering
   \includegraphics[width=4.5in]{Be_boost.png}
   \caption{Boosting the neutron flux with beryllium}
@@ -202,7 +232,7 @@ Figure \ref{fig:chars} compares the relative fraction of fast neutrons to therma
 \subsection{Other Considerations}
 \label{sec:others}
 
-There are many additional considerations that will impact the source, sample holder, and shield design. A device optimized for the in-situ irradiation and age determination of geological samples requires an instrument payload in addition to the neutron emitting device. This will include, but is not limited to: a drilling mechanism, a mass spectrometer, and a system with which to heat up the sample to perform step-heating. These instruments, such as a mass spectrometer, can be optimized to have a greater abundance sensitivity. This could offset the loss of precision from a lower flux neutron source, but will undoubtedly come at a greater mass expense. Prioritizing which of these is more important will be imperative in moving forward with future designs. Including these components' contributions to the overall device mass will place an even greater limit on the neutron source and shielding masses. A more detailed consideration of each of these components and their mass will be in a forthcoming publication. For the purposes of this paper, the device including only the neutron source/booster and shielding contributed to the total device mass. 
+There are many additional considerations that will impact the source, sample holder, and shield design. A device optimized for the \textit{in situ} irradiation and age determination of geological samples requires an instrument payload in addition to the neutron emitting device. This will include, but is not limited to: a drilling mechanism, a mass spectrometer, and a system with which to heat up the sample to perform step-heating. These instruments, such as a mass spectrometer, can be optimized to have a greater abundance sensitivity. This could offset the loss of precision from a lower flux neutron source, but will undoubtedly come at a greater mass expense. Prioritizing which of these is more important will be imperative in moving forward with future designs. Including these components' contributions to the overall device mass will place an even greater limit on the neutron source and shielding masses. A more detailed consideration of each of these components and their mass will be in a forthcoming publication. For the purposes of this paper, the device including only the neutron source/booster and shielding contributed to the total device mass. 
 
 The mass constraints on the mission could also change. The total mass threshold could be increased if the RTG on the rover could be replaced with the neutron device. This would require a much more sophisticated heat removal and power conversion system than we have proposed for the device described in this paper. Furthermore, the need of a small neutron emitting device could be avoided if other space reactor concepts are considered for future missions. In this case, a system not unlike the Cadmium Lined In-Core Irradiation Tube (CLICIT) setup at the Oregon State TRIGA reactor \cite{OSTRCLICIT} could be designed for sample irradiation.
 % you probably also need a reference for the oregon state triga reactor setup
