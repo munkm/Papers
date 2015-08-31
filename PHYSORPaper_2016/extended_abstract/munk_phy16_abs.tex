@@ -46,11 +46,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
-In this paper, a novel method to adjust the importance map used for monte carlo variance reduction is proposed. Following a brief background (section \ref{sec:Background}) describing an overview of relevant earlier work in the field, the method proposed will be discussed. The method should alleviate issues that exist in problems with strong anisotropies. 
-Section \ref{sec:Theory} contains the mathematical theory behind the method. 
-The pathway by which this method will be implemented in an existing codebase will be discussed in section \ref{sec:Implement}. 
-An overview of potential test problems that will characterize the limitations of the method is in section \ref{sec:Testing}. 
-Finally, concluding remarks are made in section \ref{sec:conclusions}. 
+In this paper, a novel method to adjust the importance map used for monte carlo variance reduction is proposed. Following a brief background (section \ref{sec:Background}) describing an overview of relevant earlier work in the field, the method will be proposed.  
+Section \ref{sec:Theory} contains the mathematical theory specific to the method, and the pathway by which it will be implemented in an existing codebase is discussed in section \ref{sec:Implement}. 
+An overview of potential test problems that will characterize the limitations specific to problems with anisotropies are described in section \ref{sec:Testing}. 
+Finally, concluding remarks are made in section \ref{sec:conclusions}.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background}
@@ -60,7 +59,7 @@ A number of hybrid methods for monte carlo variance reduction have been implemen
 
 \begin{subequations} 
 \label{CADISmethod}
-CADIS Methodology
+Biasing Parameters Used by CADIS: 
 \begin{equation}
 \hat{q}  = \frac{\phi^+(\vec {r} ,E)q(\vec {r} ,E)}{\iint\phi^+(\vec {r} ,E)q(\vec {r} ,E) dE d\vec{r}} \\
          = \frac{\phi^+(\vec {r} ,E)q(\vec {r} ,E)}{R}
@@ -83,7 +82,7 @@ FW-CADIS was designed for global problem solutions, rather than for localized de
 
 While both CADIS and FW-CADIS have been successful at variance reduction in a number of problems, neither of them incorporate angular information into the importance maps that they generate. An explicit representation of angular biasising would prove to be difficult, as acquiring the angular fluxes for each element in the problem phase space would probably include sophisticated data handling methods, and biasing monte carlo transport by angle could also require sophisticated integration methods. However, the automatic weight window generator in MCNP does have the capability of angular biasing. For some problems, this generator works well, but it requires iteration and inherently depends on monte carlo for weighting parameters. 
 
-Some methods have attempted at incorporating angular information into monte carlo variance reduction. Of note are the AVATAR \cite{van_riper_avatarautomatic_1997} and Local Importance Function Transform (LIFT) \cite{turner_automatic_1997} methods. The LIFT method uses an approximation of the adjoint flux that is piecewise continuous in angle. LIFT only captured linearly anisotropic scattering. Furthermore, LIFT required some user input and was not fully automated. The AVATAR method, which is an implementation of the maximum entropy distribution, assumes that the flux is separable and symmetric about the average current. While AVATAR did generate biased weight windows, they were not consistently biased with the source distribution like CADIS. Neither LIFT nor AVATAR performed well in voids and low-density regions \cite{turner_automatic_1997-1}. More recently, Peplow et al. \cite{Peplow-ORNL}, attempted to build off of AVATAR by consistenly biasing the source distribution. In this work, the authors attempted to create an angular version of cadis, both with and without source biasing. These methods were successful and showed that incorporating angular information improved the efficiency of the monte carlo calculation, but it was not good enough for large scale problems. 
+Some methods have attempted at incorporating angular information into monte carlo variance reduction. Of note are the AVATAR \cite{van_riper_avatarautomatic_1997} and Local Importance Function Transform (LIFT) \cite{turner_automatic_1997} methods. The LIFT method uses an approximation of the adjoint flux that is piecewise continuous in angle. LIFT only captured linearly anisotropic scattering. Furthermore, LIFT required some user input and was not fully automated. The AVATAR method, which is an implementation of the maximum entropy distribution, assumes that the flux is separable and symmetric about the average current. While AVATAR did generate biased weight windows, they were not consistently biased with the source distribution like CADIS. Neither LIFT nor AVATAR performed well in voids and low-density regions \cite{turner_automatic_1997-1}. More recently, Peplow et al. \cite{Peplow-ORNL}, built off of AVATAR by consistenly biasing the source distribution. In this work, the authors created an angular version of CADIS, both with and without source biasing. These methods were successful and showed that incorporating angular information improved the efficiency of the monte carlo calculation, but it was not good enough for large scale problems. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Methodology}
@@ -92,8 +91,8 @@ Some methods have attempted at incorporating angular information into monte carl
 \subsection{Theory}
 \label{sec:Theory}
 
-Section \ref{sec:Background} briefly described the existing state of angular-informed hybrid methods. It is evident that methods that include angular information in the importance map for monte carlo variance reduction do help to reduce the variance in anisotropic problems, but to a limited effect. 
-Consider instead a weighted adjoint scalar flux, equation \ref{eq:angularhybrid}, that is normalized by the forward angular flux. This method incorporates the direction of particle motion from the forward calculation into adjoint flux, and consequently the importance map. In theory, this should alleviate some of the issues mentioned in problems with strong anisotropy. 
+Section \ref{sec:Background} briefly described the existing state of angular-informed hybrid methods. It is evident that methods that include angular information for monte carlo variance reduction are successful in anisotropic problems, but to a limited effect. 
+Consider instead a weighted adjoint scalar flux, equation \ref{eq:angularhybrid}, that is normalized by the forward angular flux. This method incorporates the direction of particle motion from the forward calculation into the adjoint flux, and consequently the importance map. In theory, this should alleviate some of the issues mentioned in problems with strong anisotropy. 
 
 \begin{equation} 
 \label{eq:angularhybrid}
