@@ -1,5 +1,6 @@
 # Name of manuscript
-manuscript = munk_phy15_abs
+manuscript = munk_phy16_abs
+# manuscript = poop
 
 # PdfLaTeX compilation options
 latexopt = -halt-on-error -file-line-error -output-directory=build
