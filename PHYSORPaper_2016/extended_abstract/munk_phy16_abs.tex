@@ -46,16 +46,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
-In this paper, a novel method to adjust the importance map used for monte carlo variance reduction is proposed. Following a brief background (section \ref{sec:Background}) describing an overview of relevant earlier work in the field, the method will be proposed.  
-Section \ref{sec:Theory} contains the mathematical theory specific to the method, and the pathway by which it will be implemented in an existing codebase is discussed in section \ref{sec:Implement}. 
-An overview of potential test problems that will characterize the limitations specific to problems with anisotropies are described in section \ref{sec:Testing}. 
-Finally, concluding remarks are made in section \ref{sec:conclusions}.  
+In this paper, a novel method to adjust the importance map used for Monte Carlo variance reduction is proposed. Following a brief background (Section \ref{sec:Background}) describing an overview of relevant earlier work in the field, the method will be proposed.  
+Section \ref{sec:Theory} contains the mathematical theory specific to the method and the pathway by which it will be implemented in an existing codebase is discussed in Section \ref{sec:Implement}. 
+An overview of potential test problems that will characterize the limitations specific to problems with anisotropies are described in Section \ref{sec:Testing}. 
+Finally, concluding remarks are made in Section \ref{sec:conclusions}.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background}
 \label{sec:Background}
 
-A number of hybrid methods for monte carlo variance reduction have been implemented to date, each with varying success. Of interest to this paper are Consistent Adjoint Driven Importance Sampling (CADIS) \cite{wagner_automatic_1997,wagner_automated_1998,haghighat_monte_2003} and forward-weighted CADIS (FW-CADIS) \cite{wagner_forward-weighted_2007,wagner_forward-weighted_2009,wagner_forward-weighted_2010}. CADIS attempts to reduce the variance for a localized tally response by generating an importance map based on the solution to the adjoint transport equation, where the detector response is set to the adjoint source. 
+A number of hybrid methods for Monte Carlo variance reduction have been implemented to date, each with varying success. Of interest to this paper are Consistent Adjoint Driven Importance Sampling (CADIS) \cite{wagner_automatic_1997,wagner_automated_1998,haghighat_monte_2003} and forward-weighted CADIS (FW-CADIS) \cite{wagner_forward-weighted_2007,wagner_forward-weighted_2009,wagner_forward-weighted_2010}. CADIS attempts to reduce the variance for a localized tally response by generating an importance map based on the solution to the adjoint transport equation, where the detector response is set to the adjoint source. 
 
 \begin{subequations} 
 \label{CADISmethod}
@@ -76,13 +76,15 @@ w_0  = \frac{q}{\hat{q}} \\
 \label{eq:WW}
 \end{subequations}
 
-Based on the solution from an adjoint deterministic calculation, monte carlo biasing parameters are generated. What makes CADIS unique is that the source biasing and the particle weights are consistent with one another. Equation 1 summarizes the biasing parameters for CADIS. The first, equation (1a) is the biased source distribution, which weights the source distribution by it's relative contribution to the overall detector response. If a particle is born in the problem, its starting weight is given by equation (1b). Thus the particle is born with the weight of the cell that it is born into. This removes unnecessary splitting and roulette from the biased problem. Further, as a particle is transported through the problem, the weight is adjusted according to the weight windows, which are described with (1c). 
+Based on the solution from an adjoint deterministic calculation, Monte Carlo biasing parameters are generated. A feature unique to CADIS is that the source biasing and the particle weights are consistent with one another. Equation 1 summarizes the biasing parameters for CADIS. The first equation (1a) is the biased source distribution, which weights the source distribution by its relative contribution to the overall detector response. If a particle is born in the problem, its starting weight is given by equation (1b). Thus, the particle is born with the weight of the cell that it is born into. This removes unnecessary splitting and roulette from the biased problem. Further, as a particle is transported through the problem, the weight is adjusted according to the weight windows, which are described with (1c). 
 
-FW-CADIS was designed for global problem solutions, rather than for localized detector responses like CADIS. To reduce the variance for a global solution, an even particle distribution throughout the problem is sought. To do this, FW-CADIS first runs a forward deterministic calculation, and then weights the adjoint source accordingly. The solution to the adjoint equation then reflects an even particle distribution. Depending on the quantity of interest, the adjoint source is normalized differently.
+FW-CADIS was designed for global problem solutions rather than for localized detector responses like CADIS. To reduce the variance for a global solution, a uniform particle distribution throughout the problem is sought. To do this, FW-CADIS first runs a forward deterministic calculation, then weights the adjoint source accordingly. The solution to the adjoint equation then reflects an even particle distribution. Depending on the quantity of interest, the adjoint source is normalized differently.
 
-While both CADIS and FW-CADIS have been successful at variance reduction in a number of problems, neither of them incorporate angular information into the importance maps that they generate. An explicit representation of angular biasising would prove to be difficult, as acquiring the angular fluxes for each element in the problem phase space would probably include sophisticated data handling methods, and biasing monte carlo transport by angle could also require sophisticated integration methods. However, the automatic weight window generator in MCNP does have the capability of angular biasing. For some problems, this generator works well, but it requires iteration and inherently depends on monte carlo for weighting parameters. 
+While both CADIS and FW-CADIS have been successful at variance reduction in a number of problems, neither of them incorporate angular information into the importance maps that they generate. An explicit representation of angular biasising would prove to be difficult, as acquiring the angular fluxes for each element in the problem phase space would likely include sophisticated data handling methods. Biasing Monte Carlo transport by angle could also require sophisticated integration methods. However, the automatic weight window generator in MCNP does have the capability of angular biasing. For some problems, this generator works well, but it requires iteration and inherently depends on Monte Carlo for weighting parameters. 
+% re: this last line - why is it a problem that it inherently depends on MC for weighting parameters? maybe i went through the paragraph too quickly to grab that detail
 
-Some methods have attempted at incorporating angular information into monte carlo variance reduction. Of note are the AVATAR \cite{van_riper_avatarautomatic_1997} and Local Importance Function Transform (LIFT) \cite{turner_automatic_1997} methods. The LIFT method uses an approximation of the adjoint flux that is piecewise continuous in angle. LIFT only captured linearly anisotropic scattering. Furthermore, LIFT required some user input and was not fully automated. The AVATAR method, which is an implementation of the maximum entropy distribution, assumes that the flux is separable and symmetric about the average current. While AVATAR did generate biased weight windows, they were not consistently biased with the source distribution like CADIS. Neither LIFT nor AVATAR performed well in voids and low-density regions \cite{turner_automatic_1997-1}. More recently, Peplow et al. \cite{Peplow-ORNL}, built off of AVATAR by consistenly biasing the source distribution. In this work, the authors created an angular version of CADIS, both with and without source biasing. These methods were successful and showed that incorporating angular information improved the efficiency of the monte carlo calculation, but it was not good enough for large scale problems. 
+Some methods have attempted at incorporating angular information into Monte Carlo variance reduction. Of note are the AVATAR \cite{van_riper_avatarautomatic_1997} and Local Importance Function Transform (LIFT) \cite{turner_automatic_1997} methods. The LIFT method uses an approximation of the adjoint flux that is piecewise continuous in angle. LIFT only captures linearly anisotropic scattering. Furthermore, LIFT requires some user input and was not fully automated. The AVATAR method, which is an implementation of the maximum entropy distribution, assumes that the flux is separable and symmetric about the average current. While AVATAR does generate biased weight windows, they were not consistently biased with the source distribution (while those in CADIS are). Neither LIFT nor AVATAR perform well in voids and low-density regions \cite{turner_automatic_1997-1}. More recently, Peplow et al. \cite{Peplow-ORNL}, built off of AVATAR by consistenly biasing the source distribution. In this work, the authors created an angular version of CADIS both with and without source biasing. These methods were successful and showed that incorporating angular information improved the efficiency of the Monte Carlo calculation, but it was not good enough for large scale problems. %not good enough how?
+% this paragraph had a mix of past and present tense, i changed it all to present
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Methodology}
@@ -91,7 +93,7 @@ Some methods have attempted at incorporating angular information into monte carl
 \subsection{Theory}
 \label{sec:Theory}
 
-Section \ref{sec:Background} briefly described the existing state of angular-informed hybrid methods. It is evident that methods that include angular information for monte carlo variance reduction are successful in anisotropic problems, but to a limited effect. 
+Section \ref{sec:Background} briefly described the existing state of angular-informed hybrid methods. It is evident that methods that include angular information for Monte Carlo variance reduction are successful in anisotropic problems, but to a limited effect. 
 Consider instead a weighted adjoint scalar flux, equation \ref{eq:angularhybrid}, that is normalized by the forward angular flux. This method incorporates the direction of particle motion from the forward calculation into the adjoint flux, and consequently the importance map. In theory, this should alleviate some of the issues mentioned in problems with strong anisotropy. 
 
 \begin{equation} 
@@ -99,31 +101,31 @@ Consider instead a weighted adjoint scalar flux, equation \ref{eq:angularhybrid}
 \phi^{+}(\vec{r},E) = \frac{\int \psi(\vec {r} ,E,\hat{\Omega})\psi^+(\vec {r} ,E,\hat{\Omega})d\hat\Omega }{\int\psi(\vec {r} ,E,\hat{\Omega})d\hat\Omega}
 \end{equation}
 
-As discussed in section \ref{sec:Background}, both CADIS and FW-CADIS utilize the adjoint scalar flux to generate biasing parameters for the monte carlo calculation. 
+As discussed in section \ref{sec:Background}, both CADIS and FW-CADIS utilize the adjoint scalar flux to generate biasing parameters for the Monte Carlo calculation. 
 This method can be used as a subroutine within existing CADIS and FW-CADIS implementations, as it merely adjusts the adjoint scalar flux.  
 
 \subsection{Implementation}
 \label{sec:Implement}
 
-The method described in \ref{sec:Theory} is currently in the implementation phase. The method will be added to the ORNL software package, ADVANTG \cite{mosher_new_2010}, which uses the 3-D Discrete Ordinates code Denovo \cite{evans_denovo:_2010} for deterministic transport and MCNP \cite{brown_mcnp_2002} for monte carlo transport. Denovo has been modified to optionally output angular fluxes and quadrature weights. Furthermore, the method that performs the integration in equation \ref{eq:angularhybrid} has also been incorporated into Denovo. At present, the integration of this functionality into ADVANTG is being performed. Once implemented, this method will be a user-selected option for running an adjusted CADIS or FW-CADIS calculation. 
+The method described in \ref{sec:Theory} is currently in the implementation phase. The method will be added to the ORNL software package, ADVANTG \cite{mosher_new_2010}, which uses the 3-D Discrete Ordinates code Denovo \cite{evans_denovo:_2010} for deterministic transport and MCNP \cite{brown_mcnp_2002} for Monte Carlo transport. Denovo has been modified to optionally output angular fluxes and quadrature weights. Furthermore, the method that performs the integration in equation \ref{eq:angularhybrid} has also been incorporated into Denovo. At present, the integration of this functionality into ADVANTG is underway. Once implemented, this method will be a user-selected option for running an adjusted CADIS or FW-CADIS calculation. 
 
-It is important to note that the adjoint and forward determinstic calculations, which are required to generate the adjusted flux, do not necessarily depend on information from one another. As such, in a CADIS problem the deterministic transport calculations can be run in parallel. A traditional CADIS calculation only requires an adjoint deterministic calculation, but this method will add an additional forward calculation. For a FW-CADIS calculation, a forward calculation is used to generate the adjoint source distribution for the adjoint transport. In this case, each deterministic calculation will be run concurrently, but no additional deterministic problems will be required. 
+It is important to note that the adjoint and forward determinstic calculations, which are required to generate the adjusted flux, do not necessarily depend on information from one another. As such, in a CADIS problem, the deterministic transport calculations can be run in parallel. A traditional CADIS calculation only requires an adjoint deterministic calculation, but this method will add an additional forward calculation. For a FW-CADIS calculation, a forward calculation is used to generate the adjoint source distribution for the adjoint transport. In this case, each deterministic calculation will be run concurrently, but no additional deterministic problems will be required. 
 
 At the time of the method's implementation in the existing codebase, it will follow a general solution process, which is summarized below. 
 \begin{enumerate}
-\item The monte carlo input is passed to ADVANTG. 
+\item The Monte Carlo input is passed to ADVANTG. 
 \item ADVANTG generates two Denovo $S_N$ inputs (one forward, one adjoint), and runs them.
 \item The angular fluxes and quadrature weights are acquired from each output and used to perform the integral in equation \ref{eq:angularhybrid}
-\item The adjusted adjoint flux is used to generate the biased source distribution and weight window map for the monte carlo calculation.
-\item Last, the biased monte carlo calculation is run. 
+\item The adjusted adjoint flux is used to generate the biased source distribution and weight window map for the Monte Carlo calculation.
+\item Last, the biased Monte Carlo calculation is run. 
 \end{enumerate}
 
 \subsection{Testing}
 \label{sec:Testing}
 
-The testing phase of this project aims to (1) characterize the method's performance in a variety of problems that have anisotropies, and (2) to compare how well the method performs compared to traditional CADIS and FW-CADIS.
+The testing phase of this project aims to (1) characterize the method's performance in a variety of problems that have anisotropies, and (2) compare how well the method performs compared to traditional CADIS and FW-CADIS.
 The goal of the former is to determine in which situations the method performs best, and the latter aims to quantify the extent to which the method is successful. 
-Table \ref{tab:testprobs} summarizes a selection of test problems that have shown difficulty for CADIS and FW-CADIS, and problems that the authors expect to have strong angular anisotropy. 
+Table \ref{tab:testprobs} summarizes a selection of test problems that have shown difficulty for CADIS and FW-CADIS as well as additional problems that the authors expect to have strong angular anisotropy. 
 In particular, problems where the direction of the particles is relevant to the importance of a cell will be relevant to characterizing the proposed method. Each of these problems has some angular anisotropy, but have different physical means by which this anisotropy is created. This selection of test problems should help to inform what types of larger systems and problems the method will be useful to optimize. 
 
  \begin{table}
@@ -150,11 +152,11 @@ In particular, problems where the direction of the particles is relevant to the 
 \section{Conclusions}
 \label{sec:conclusions}
 
-A method has been proposed herein to adjust the adjoint scalar flux before generating a monte carlo biased source distribution and weight window map. 
-This method utilizes a deterministic forward calculation to weight the adjoint flux by the forward flux, which will incorporate the actual direction of particle flow into the monte carlo biasing parameters. 
-Furthermore, this method is novel as it utilizes explicit angular fluxes and quadratures to weight the integral of the adjoint angular flux, rather than currents and scalar fluxes to approximate angular behavior. 
+A method has been proposed herein to adjust the adjoint scalar flux before generating a Monte Carlo biased source distribution and weight window map. 
+This method utilizes a deterministic forward calculation to weight the adjoint flux by the forward flux, which will incorporate the actual direction of particle flow into the Monte Carlo biasing parameters. 
+Furthermore, this method is novel as it utilizes explicit angular fluxes and quadratures to weight the integral of the adjoint angular flux, rather than using currents and scalar fluxes to approximate angular behavior. 
 This method is designed to be used with existing implementations of CADIS and FW-CADIS, but any method that utilizes the adjoint scalar flux could also reasonably incorporate this method. 
-As it stands, this method is nearing completion in implementation, but remains to be tested. 
+As it stands, this method is nearing completion in implementation but remains to be tested. 
 The testing scheme that has been proposed thoroughly explores all potential situations where angular information is required, and should provide information on the method's performance as compared to classical CADIS and FW-CADIS. 
 This test framework will also inform what types of large, physical application problems that this method may be suited towards. 
 
