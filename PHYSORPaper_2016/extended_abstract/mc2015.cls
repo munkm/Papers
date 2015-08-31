@@ -58,7 +58,7 @@
 % Header/footer for first page
 \fancypagestyle{plain}{
   \fancyhf{}
-  \lhead{\scriptsize{\emph{PHYSOR 2016--extended abstract}}
+  \lhead{\scriptsize{\emph{PHYSOR 2016 - Unifying Theory and Experiments in the 21st Century}}}
   \lfoot{}
 }
 
