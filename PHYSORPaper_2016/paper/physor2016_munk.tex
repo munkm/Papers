@@ -1,0 +1,210 @@
+
+\documentclass[12pt]{article}
+
+\usepackage{physor2016}
+
+\usepackage{bm}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepgflibrary{shapes.geometric}
+
+\usepackage{booktabs}
+
+\usepackage{siunitx}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+% Define title. Use all CAPITALS.
+%------------------------------------------------------------------------------
+\title{AN ANGLE-INFORMED HYBRID METHOD FOR DEEP-PENETRATION RADIATION TRANSPORT APPLIED TO CADIS AND FW-CADIS}
+%
+% ...and authors
+%
+\author{ 
+  \textbf{Madicken Munk and Rachel N. Slaybaugh} \\
+  Department of Nuclear Engineering \\
+  University of California, Berkeley \\
+  3115B Etcheverry Hall, Berkeley, CA \\
+  \href{mailto:madicken@berkeley.edu}{madicken@berkeley.edu}\\
+  }
+
+
+%------------------------------------------------------------------------------
+\renewcommand{\shortauthor}      % Author's names here
+           {M. Munk and R. N. Slaybaugh}  
+\renewcommand{\shorttitle}       % Short title here
+           {Angle-Informed CADIS and FW-CADIS}  
+
+%------------------------------------------------------------------------------
+% Setup PDF info. This sets several values which are listed as the "properties"
+% of the PDF file.
+%------------------------------------------------------------------------------
+\hypersetup{
+  pdftitle=\shorttitle,
+  pdfauthor=\shortauthor
+}
+
+
+\begin{document}
+
+%\doublespacing
+
+%\linenumbers
+
+%------------------------------------------------------------------------------
+% Make the titlepage and set the pagestyle to fancy throughout
+%------------------------------------------------------------------------------
+\maketitle
+
+\begin{abstract}
+This is our abstract
+\end{abstract}
+
+\keywords{Hybrid Methods, CADIS, FW-CADIS, Angular Biasing}
+
+%------------------------------------------------------------------------------
+%
+%------------------------------------------------------------------------------
+\section{INTRODUCTION}
+\label{sect::intro}
+
+Discuss importance of hybrid methods \\
+Establish existing state of commonly used hybrid methods \\
+Mention that angle-informed methods exist \\
+Briefly mention why our method helps to contribute to this. \\
+
+
+%------------------------------------------------------------------------------
+%
+%------------------------------------------------------------------------------
+\section{BACKGROUND}
+\label{sect::second}
+
+Talk about why hybrid methods are important (for deep-penetration RT) \\
+Highlight how Adjoint = Importance \\
+Highlight how Contributon = Response \\
+Highlight the CADIS method \\
+Highlight the FW-CADIS method \\
+Talk about what probelms CADIS and FW-CADIS succeed in, then talk about where they fall short. \\
+Introduce angle-informed and angle-biased methods. \\
+Higlight AVATAR \\
+Highlight Turner \& Larsen's method. \\
+Conclude section with discussion of what is missing from CADIS/FW-CADIS/Angle Methods. \\
+
+%------------------------------------------------------------------------------
+%
+%------------------------------------------------------------------------------
+\section{METHODOLOGY}
+\label{sect::second}
+
+Introduce section with goal of our method. \\
+
+%------------------------------------------------------------------------------
+%
+%------------------------------------------------------------------------------
+\subsection{Theory}
+\label{subsect::major}
+
+Show our method equation. \\
+Discuss how this relates to the concept of importance with the adjoint. \\
+Discuss how this relates to contributon response. \\
+Say physically how this helps us track in problems with strong anisotropy. \\
+
+%------------------------------------------------------------------------------
+%
+%------------------------------------------------------------------------------
+
+\subsection{Implementation}
+\label{subsect::major}
+
+Introduce code packages we used. \\
+Write brief intro for MCNP, ADVANTG, Denovo. \\
+
+
+%------------------------------------------------------------------------------
+%
+%------------------------------------------------------------------------------
+\subsubsection{Implementation in Denovo} 
+\label{subsubsect::minor}
+
+Describe what was done in Denovo. \\
+Motivate how any user could use what is available in Denovo to then use our method. \\
+
+
+%------------------------------------------------------------------------------
+%
+%------------------------------------------------------------------------------
+\subsubsection{Implementation in ADVANTG} 
+\label{subsubsect::minor}
+
+Describe packages in ADVANTG that were created. 
+
+
+%------------------------------------------------------------------------------
+%
+%------------------------------------------------------------------------------
+\section{RESULTS AND DISCUSSION} 
+\label{sect::references}
+
+Show test problem geometry
+\\ Show flux map for analog MC
+\\ Show flux uncertainties for analog
+\\ Show flux map for FW-CADIS MC
+\\ Show flux uncertanties for FW-CADIS
+\\ Show Contributon Distributon for geometry
+\\ Show biasing parameter distribution for geometry
+\\ Show flux map for our method
+\\ Show flux uncertanties for our method
+\\ Discuss differences and issues encountered with each
+
+%------------------------------------------------------------------------------
+%
+%------------------------------------------------------------------------------
+\section{FUTURE WORK} 
+\label{sect::references}
+
+Show the future test phase space we plan to cover. 
+
+
+%------------------------------------------------------------------------------
+%
+%------------------------------------------------------------------------------
+\section{CONCLUSION} 
+\label{sect::conclusion}
+
+Write concluding remarks on what we've done so far and why we anticipate this being significant. 
+
+%------------------------------------------------------------------------------
+%
+%------------------------------------------------------------------------------
+\section*{ACKNOWLEDGMENTS}
+
+This is where we will thank our money- and knowledge- suppliers. 
+
+
+\bibliographystyle{physor2016}
+\bibliography{physor2016}
+
+\appendix
+
+\makeatletter
+\def\@seccntformat#1{APPENDIX \csname the#1\endcsname.~}
+\makeatother
+
+%------------------------------------------------------------------------------
+% If you need to make one (or more) appendix (appendices), place them here as
+% sections
+%------------------------------------------------------------------------------
+\section{HOW TO MAKE APPENDICES}
+\label{app::a}
+
+This is a placeholder for my first appendix
+
+\section{OTHER APPENDIX STUFF}
+\label{app::b}
+
+This is a placeholder for my second appendix
+
+\end{document}
+
