@@ -23,9 +23,8 @@
 %
 \author{ 
   \textbf{Madicken Munk and R.\ N.\ Slaybaugh} \\
-  Department of Nuclear Engineering \\
-  University of California, Berkeley \\
-  3115B Etcheverry Hall, Berkeley, CA \\
+  Department of Nuclear Engineering, University of California, Berkeley \\
+  3115B Etcheverry Hall, Berkeley, CA 94720\\
   \href{mailto:madicken@berkeley.edu}{madicken@berkeley.edu}\\
   \href{mailto:slaybaugh@berkeley.edu}{slaybaugh@berkeley.edu}\\
   \\
@@ -74,10 +73,11 @@ This is our abstract
 \section{INTRODUCTION}
 \label{sect::intro}
 
-Discuss importance of hybrid methods \\
-Establish existing state of commonly used hybrid methods \\
-Mention that angle-informed methods exist \\
-Briefly mention why our method helps to contribute to this. \\
+Motivate hybrid methods (problems we want to solve and can't or are hard)\\
+We have established a new method to take on this problem; brief description of method \\
+Briefly how this method is novel compared to other methods\\
+Preview of results (tell 'em the punchline)\\
+Outline of paper (state what will be in each section)
 
 
 %------------------------------------------------------------------------------
@@ -86,12 +86,17 @@ Briefly mention why our method helps to contribute to this. \\
 \section{BACKGROUND}
 \label{sect::second}
 
-Talk about why hybrid methods are important (for deep-penetration RT) \\
-Highlight how Adjoint = Importance \\
-Highlight how Contributon = Response \\
+Intro paragraph describing what is covered in background and why\\
+(if makes sense for flow/content) quick statement about types of VR and what we'll focus on)\\
+Write forward and adjoint importance equation and define terms\\
+explain Adjoint = Importance; point out this is a concept frequently used in variance reduction \\
+expalin Contributon = Response; give any context about use of contributons \\
+
+\section{PAST WORK}
+\label{sec::past}
 Highlight the CADIS method \\
 Highlight the FW-CADIS method \\
-Talk about what probelms CADIS and FW-CADIS succeed in, then talk about where they fall short. \\
+Talk about what problems CADIS and FW-CADIS succeed in, then talk about where they fall short. \\
 Introduce angle-informed and angle-biased methods. \\
 Higlight AVATAR \\
 Highlight Turner \& Larsen's method. \\
@@ -115,6 +120,7 @@ Show our method equation. \\
 Discuss how this relates to the concept of importance with the adjoint. \\
 Discuss how this relates to contributon response. \\
 Say physically how this helps us track in problems with strong anisotropy. \\
+Highlight how this is different from past methods.
 
 %------------------------------------------------------------------------------
 %
@@ -153,15 +159,17 @@ Describe packages in ADVANTG that were created.
 \label{sect::references}
 
 Show test problem geometry
-\\ Show flux map for analog MC
-\\ Show flux uncertainties for analog
-\\ Show flux map for FW-CADIS MC
-\\ Show flux uncertanties for FW-CADIS
-\\ Show Contributon Distributon for geometry
-\\ Show biasing parameter distribution for geometry
-\\ Show flux map for our method
-\\ Show flux uncertanties for our method
-\\ Discuss differences and issues encountered with each
+\\ Show flux map from analog MC
+\\ Show flux uncertainties from analog MC
+\\ Show biasing parameter map from CADIS
+\\ Show flux map from CADIS
+\\ Show flux uncertainties from CADIS
+\\ Show Contributon Distributon from new method
+\\ Show biasing parameter distribution from new method
+\\ Show flux map from new method
+\\ Show flux uncertainties from new method
+\\ Discuss differences and meaning of differences of results and parameter maps
+\\ Discuss implications of these differences for solving other problems more generally
 
 %------------------------------------------------------------------------------
 %
@@ -178,7 +186,9 @@ Show the future test phase space we plan to cover.
 \section{CONCLUSION} 
 \label{sect::conclusion}
 
-Write concluding remarks on what we've done so far and why we anticipate this being significant. 
+Recap what we told them (what problem we're trying to solve; about this method; how it's different than past methods)\\
+Recap problem we solved and results\\
+Strong punchline paragraph about potential impact based on theory and these results.
 
 %------------------------------------------------------------------------------
 %
