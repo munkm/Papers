@@ -3,6 +3,7 @@
 
 \usepackage{physor2016}
 
+\usepackage{amsmath}
 \usepackage{bm}
 
 \usepackage{graphicx}
@@ -22,17 +23,23 @@
 % ...and authors
 %
 \author{ 
-  \textbf{Madicken Munk and Rachel N. Slaybaugh} \\
-  Department of Nuclear Engineering \\
-  University of California, Berkeley \\
-  3115B Etcheverry Hall, Berkeley, CA \\
+  \textbf{Madicken Munk and R.~N.~Slaybaugh} \\
+  Department of Nuclear Engineering, University of California, Berkeley \\
+  3115B Etcheverry Hall, Berkeley, CA 94720, USA\\
   \href{mailto:madicken@berkeley.edu}{madicken@berkeley.edu}\\
+  \href{mailto:slaybaugh@berkeley.edu}{slaybaugh@berkeley.edu}\\
+  \\
+  \textbf{T.~M.~Pandya, Seth R.~Johnson, and T.~M.~Evans}\\
+  Radiation Transport Group\\
+  Oak Ridge National Laboratory, P.O.\ Box 2008, Oak Ridge, TN 37831, USA\\
+  \href{mailto:pandyatm@ornl.gov}{pandyatm@ornl.gov}\\
+  \href{mailto:johnsonsr@ornl.gov}{johnsonsr@ornl.gov}\\
+  \href{mailto:evanstm@ornl.gov}{evanstm@ornl.gov}
   }
-
-
+  
 %------------------------------------------------------------------------------
 \renewcommand{\shortauthor}      % Author's names here
-           {M. Munk and R. N. Slaybaugh}  
+           {M.\ Munk~et~al.}  
 \renewcommand{\shorttitle}       % Short title here
            {Angle-Informed CADIS and FW-CADIS}  
 
@@ -69,10 +76,11 @@ This is our abstract
 \section{INTRODUCTION}
 \label{sect::intro}
 
-Discuss importance of hybrid methods \\
-Establish existing state of commonly used hybrid methods \\
-Mention that angle-informed methods exist \\
-Briefly mention why our method helps to contribute to this. \\
+Motivate hybrid methods in general and anisotropicly-focus methods in particular\\
+We have developed a new method that builds on existing hybrid methods to tackle the anisotropic case; brief description of method \\
+Briefly how this method is novel compared to other methods\\
+Preview of results (tell 'em the punchline)\\
+Outline of paper (state what will be in each section)
 
 
 %------------------------------------------------------------------------------
@@ -81,16 +89,21 @@ Briefly mention why our method helps to contribute to this. \\
 \section{BACKGROUND}
 \label{sect::second}
 
-Talk about why hybrid methods are important (for deep-penetration RT) \\
-Highlight how Adjoint = Importance \\
-Highlight how Contributon = Response \\
+Intro paragraph describing what is covered in background and why\\
+(if makes sense for flow/content) quick statement about types of VR and what we'll focus on\\
+Write forward and adjoint importance equation and define terms\\
+explain Adjoint = Importance; point out this is a concept frequently used in variance reduction \\
+expalin Contributon = Response; give any context about use of contributons \\
+
+\section{PAST WORK}
+\label{sec::past}
 Highlight the CADIS method \\
 Highlight the FW-CADIS method \\
-Talk about what probelms CADIS and FW-CADIS succeed in, then talk about where they fall short. \\
+Talk about what problems CADIS and FW-CADIS succeed in, then talk about where they fall short. \\
 Introduce angle-informed and angle-biased methods. \\
-Higlight AVATAR \\
-Highlight Turner \& Larsen's method. \\
-Conclude section with discussion of what is missing from CADIS/FW-CADIS/Angle Methods. \\
+Higlight AVATAR + shortcomings \\
+Highlight Turner \& Larsen's method + shortcomings\\
+Conclude section with discussion of what is missing from CADIS/FW-CADIS/Angle Methods to motivate new method. \\
 
 %------------------------------------------------------------------------------
 %
@@ -110,6 +123,7 @@ Show our method equation. \\
 Discuss how this relates to the concept of importance with the adjoint. \\
 Discuss how this relates to contributon response. \\
 Say physically how this helps us track in problems with strong anisotropy. \\
+Highlight how this is different from past methods.
 
 %------------------------------------------------------------------------------
 %
@@ -118,28 +132,33 @@ Say physically how this helps us track in problems with strong anisotropy. \\
 \subsection{Implementation}
 \label{subsect::major}
 
-Introduce code packages we used. \\
-Write brief intro for MCNP, ADVANTG, Denovo. \\
+We implemented this new method through the AutomateD VAriaNce reducTion Generator (ADVANTG)~\cite{mosher_new_2010} software developed at ORNL. 
+ADVANTG automates the generation of the importance map and biased source distribution created using either the CADIS or FW-CADIS methods for use in MCNP5~\cite{brown_mcnp_2002}. 
+An input file in MCNP syntax is provided by the user in addition to some instructions for running ADVANTG. 
+ADVANTG uses this information to generate input file(s) and exectues the discrete ordinates solver Denovo~\cite{evans_denovo:_2010} in adjoint or forward and adjoint mode, as appropriate.
+The deterministic calculations can be performed using multiple cores and/or processors (e.g., on multi-core desktop systems and clusters). 
+ADVANTG takes Denovo's output, executes the CADIS or FW-CADIS methods, and the final variance reduction parameters are output in a format that can be used with unmodified versions of MCNP. 
+The primary objective of the development of ADVANTG has been to reduce both the user effort and the computational time required to obtain accurate and precise tally estimates
+across a broad range of challenging transport application areas.
 
+We chose to use the ADVANTG for several key reasons. 
+The most important is that the implementation is nearly invisible to the user and therefore their experience of using this method will be nearly identical to using CADIS or FW-CADIS (which we will jointly refer to FW/CADIS).
+That is, the user simply adds an additional instruction asking to use the angle informed method and the interface does not change otherwise.
+This facilitates easy adoption.
+Further, only one MCNP input file is required to compare the new method to FW/CADIS.
+Finally, it was simpler to implement the new method through ADVANTG than starting separately as we could take advantage of so much existing infrastructure in the coupling.
 
-%------------------------------------------------------------------------------
-%
-%------------------------------------------------------------------------------
-\subsubsection{Implementation in Denovo} 
-\label{subsubsect::minor}
+The major modifications required to implement this method were to Denovo. 
+The angular flux is typically not stored or written as the desired output is typically the scalar flux.
+The new method, however, requires the angular flux to create the scalar flux, and therefore Denovo was modified to store and write the angular flux.
+A new function was also added that takes the forward and adjoint fluxes and performs the integration indicated in eqn.~\eqref{}. 
+This set of scalar fluxes is then written the way any scalar flux output from Denovo would be.
 
-Describe what was done in Denovo. \\
-Motivate how any user could use what is available in Denovo to then use our method. \\
-
-
-%------------------------------------------------------------------------------
-%
-%------------------------------------------------------------------------------
-\subsubsection{Implementation in ADVANTG} 
-\label{subsubsect::minor}
-
-Describe packages in ADVANTG that were created. 
-
+The benefit the bulk of the implementation being in Denovo is several fold. 
+From the standpoint of ADVANTG, there are very few differences between the new method and FW/CADIS and therefore implementation is straightforward.
+Further, anyone who finds a use for a scalar flux created as in eqn.~\eqref{} will now be able  access it.
+Finally, it might be useful to have access to the full angular flux. 
+Examining the angular flux for a problem could have research or pedagogical implications, and some other variance reduction method that uses the angular flux explicitly could be more easily developed in the future.
 
 %------------------------------------------------------------------------------
 %
@@ -148,15 +167,17 @@ Describe packages in ADVANTG that were created.
 \label{sect::references}
 
 Show test problem geometry
-\\ Show flux map for analog MC
-\\ Show flux uncertainties for analog
-\\ Show flux map for FW-CADIS MC
-\\ Show flux uncertanties for FW-CADIS
-\\ Show Contributon Distributon for geometry
-\\ Show biasing parameter distribution for geometry
-\\ Show flux map for our method
-\\ Show flux uncertanties for our method
-\\ Discuss differences and issues encountered with each
+\\ Show flux map from analog MC
+\\ Show flux uncertainties from analog MC
+\\ Show biasing parameter map from CADIS
+\\ Show flux map from CADIS
+\\ Show flux uncertainties from CADIS
+\\ Show Contributon Distributon from new method
+\\ Show biasing parameter distribution from new method
+\\ Show flux map from new method
+\\ Show flux uncertainties from new method
+\\ Discuss differences and meaning of differences of results and parameter maps
+\\ Discuss implications of these differences for solving other problems more generally
 
 %------------------------------------------------------------------------------
 %
@@ -173,15 +194,16 @@ Show the future test phase space we plan to cover.
 \section{CONCLUSION} 
 \label{sect::conclusion}
 
-Write concluding remarks on what we've done so far and why we anticipate this being significant. 
+Recap what we told them (what problem we're trying to solve; about this method; how it's different than past methods)\\
+Recap problem we solved and results\\
+Strong punchline paragraph about potential impact based on theory and these results.
 
 %------------------------------------------------------------------------------
 %
 %------------------------------------------------------------------------------
 \section*{ACKNOWLEDGMENTS}
 
-This is where we will thank our money- and knowledge- suppliers. 
-
+This material is based on work supported by the Department of Energy under award number DE-NE0008286. This report was prepared as an account of work sponsored by an agency of the United States Government. Neither the United States Government nor any agency thereof, nor any of their employees, makes any warranty, express or implied, or assumes any legal liability or responsibility for the accuracy, completeness, or usefulness of any information, apparatus, product, or process disclosed, or represents that its use would not infringe privately owned rights. Reference herein to any specific commercial product, process, or service by trade name, trademark, manufacturer, or otherwise does not necessarily constitute or imply its endorsement, recommendation, or favoring by the United States Government or any agency thereof. The views and opinions of the authors expressed herein do not necessarily state or reflect those of the United States Government or any agency thereof.
 
 \bibliographystyle{physor2016}
 \bibliography{physor2016}
