@@ -76,14 +76,29 @@ This is our abstract
 \section{INTRODUCTION}
 \label{sect::intro}
 
-Motivate hybrid methods in general and anisotropically-focus methods in particular\\
+Efficiently modeling radiation transport in deep penetration shielding problems is essential to the safe operation of many types of nuclear facilities as well as the development of monitoring and detection systems. We would like to be able to perform such calculations with Monte Carlo (MC) methods, but it can be quite challenging to obtain acceptable statistical uncertainties in the computed tallies. Thus, many variance reduction (VR) strategies, some of which we will discuss, have been developed to facilitate accurate calculations in reasonable times. 
 
-We have developed a new method that builds on existing hybrid methods to tackle the anisotropic case; this method builds on existing infrastructure to generate a forward-weighted adjoint scalar flux, based on a normalized contributon flux. 
-This method incorporates an angle-integrated contributon flux to generate the weighting parameters for existing hybrid methods, and, accordingly helps to generate biasing parameters for strongly anisotropic systems in deep-penetration radiation transport problems. 
-We present preliminary results for our proposed method for an optically-thick labyrinth problem for an analog case, a traditional CADIS case, and an angular CADIS case, which show that [Talk about the results that we have here]. 
-In this paper, we will begin with a brief background (Section \ref{sect::second}) of important concepts relating to variance reduction, and give a short description of existing hybrid methods for deep-penetration radiation transport.
-The following section, \ref{sect::methodology}, will describe the mathematical foundation of our proposed method (Section \ref{subsect::theory})and the software that we used to implement it (Section \ref{subsect::implementation}). 
-The results and accompanying discussion are described in Section \ref{sect::results}. Following this, in Section \ref{sect::future} we will present our future test phase-space, and describe how it covers various aspects of anisotropy for deep-penetration problems. We conclude in Section \ref{sect::conclusion} with a summary of our work. 
+An additional challenge, however, is added for problems that exhibit a strong degree of angular anisotropy in particle flux. 
+Many existing VR methods do not include angular information in their techniques, and therefore do not work well for these problems.  
+Some VR methods do include angular information, but in general these methods have challenges in breadth of applicability or ease of use that make them inadequate as broad tools, or are too costly to use reliably in practice.
+
+With the goal of filling some of these gaps, we have developed a new method that builds on the Consistent Adjoint Driven Importance Sampling (CADIS) and Forward Weighted-CADIS (FW-CADIS) methods~\cite{wagner_forward-weighted_2007} to tackle fixed-source problems that exhibit a high degree of angular anisotropy. 
+This method builds on existing software infrastructure in a way that facilitates easy adoption.
+CADIS and FW-CADIS, which we will jointly refer to FW/CADIS, use scalar flux estimates from a deterministic calcualtion to create VR parameters for use in MC.
+Our new method uses a forward-weighted adjoint scalar flux based on a normalized contributon flux instead of a standard scalar flux.
+This new integration scheme includes angular information in order to improve MC performance for problems with anisotropic particle fluxes.
+
+We have implemented this method and tested it on an optically-thick source-detector labyrinth demonstration problem. 
+This demonstration problems has characteristics that are particularly challenging for existing methods and provides an opportunity to deeply investigate differences between this new method and CADIS.
+As such, we compare an analog calculation, a standard CADIS calculation, and a new angular CADIS calculation
+% we need to use a real name here%
+, which show that [Talk about the results that we have here]. 
+
+In this paper, we begin with a brief background (Section~\ref{sect::second}) of important concepts relating to variance reduction and existing hybrid methods for deep-penetration radiation transport.
+We then provide the context of existing methods in Section~\ref{sec::past}. 
+Section~\ref{sect::methodology} describes the mathematical foundation of our proposed method (Section~\ref{subsect::theory}) and the software that we used to implement it (Section~\ref{subsect::implementation}). 
+The results and accompanying discussion are described in Section~\ref{sect::results}. Following this, Section~\ref{sect::future} presents our future test plans and details how this plan will map out the application space beyond this single demonstration test. 
+We conclude in Section~\ref{sect::conclusion}. 
 
 
 %------------------------------------------------------------------------------
@@ -153,7 +168,7 @@ The primary objective of the development of ADVANTG has been to reduce both the 
 across a broad range of challenging transport application areas.
 
 We chose to use ADVANTG for several key reasons. 
-The most important is that the implementation is nearly invisible to the user and therefore their experience of using this method will be nearly identical to using CADIS or FW-CADIS (which we will jointly refer to FW/CADIS).
+The most important is that the implementation is nearly invisible to the user and therefore their experience of using this method will be nearly identical to using CADIS or FW-CADIS.
 That is, the user simply adds an additional instruction asking to use the angle informed method and the interface does not change otherwise.
 This facilitates easy adoption.
 Further, only one MCNP input file is required to compare the new method to FW/CADIS.
