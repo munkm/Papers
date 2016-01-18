@@ -6,6 +6,13 @@
 \usepackage{amsmath}
 \usepackage{bm}
 
+\newcommand{\ve}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\Macro}{\ensuremath{\Sigma}}
+\newcommand{\vOmega}{\ensuremath{\hat{\Omega}}}
+\newcommand{\omvec}{\ensuremath{\hat{\Omega}}}
+\newcommand{\rvec}{\ensuremath{\vec{r}}}
+\newcommand{\vecr}{\ensuremath{\vec{r}}}
+
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepgflibrary{shapes.geometric}
@@ -78,7 +85,7 @@ This is our abstract
 
 Efficiently modeling radiation transport in deep penetration shielding problems is essential to the safe operation of many types of nuclear facilities as well as the development of monitoring and detection systems. We would like to be able to perform such calculations with Monte Carlo (MC) methods, but it can be quite challenging to obtain acceptable statistical uncertainties in the computed tallies. Thus, many variance reduction (VR) strategies, some of which we will discuss, have been developed to facilitate accurate calculations in reasonable times. 
 
-An additional challenge, however, is added for problems that exhibit a strong degree of angular anisotropy in particle flux. 
+Problems that exhibit a strong degree of angular anisotropy in particle flux, however, tend to be even more challenging for effective VR.
 Many existing VR methods do not include angular information in their techniques, and therefore do not work well for these problems.  
 Some VR methods do include angular information, but in general these methods have challenges in breadth of applicability or ease of use that make them inadequate as broad tools, or are too costly to use reliably in practice.
 
@@ -107,20 +114,51 @@ We conclude in Section~\ref{sect::conclusion}.
 \section{BACKGROUND}
 \label{sect::second}
 
-Intro paragraph describing what is covered in background and why\\
-(if makes sense for flow/content) quick statement about types of VR and what we'll focus on\\
-Write forward and adjoint importance equation and define terms\\
-explain Adjoint = Importance; point out this is a concept frequently used in variance reduction \\
-expalin Contributon = Response; give any context about use of contributons \\
+This section provides the equations we are solving as well as background concepts that are used in many VR methods and ideas needed for our method in particular. 
+Many modern radiation transport codes offer variance reduction capabilities that employ an importance map\textemdash a measure of how important a particular particle in a Monte Carlo simulation is to the tally being computed\textemdash which is related to the adjoint form of the transport equation. 
+%Using this importance information, the Monte Carlo code can spend more time on important particles and less time on unimportant particles. This reduces the statistical variance in the final tally result for a given amount of computational time, providing better results in less time. 
+Our new method also uses contributons, which (words about contributons) ~\cite{williams_contributorn_1992}. 
+
+%Write forward and adjoint importance equation and define terms\\
+The steady state, fixed-source forms of the forward and adjoint transport equation are
+\begin{align*}
+\bigl[\hat{\Omega} \cdot \nabla + \Macro_t(\vec{r}, E)\bigr] \psi(\vec{r}, \hat{\Omega}, E)  =  \int_0^{\infty} dE' &\int_{4\pi} d\hat{\Omega'} \:\Macro_{s}(\vec{r}, E' \to E, \hat{\Omega'} \cdot \hat{\Omega}) \psi(\vec{r}, \hat{\Omega'}, E') + q(\vec{r}, \vOmega, E)\\
+%
+\bigl[-\vOmega \cdot \nabla + \Sigma_t(\rvec, E)\bigr] \psi^{\dagger}(\vec{r}, \vOmega, E) = \int_0^{\infty} dE' &\int_{4\pi} d\vOmega' \: \Sigma_s(\rvec, E \rightarrow E', \vOmega \cdot \vOmega') \psi^{\dagger}(\rvec, \vOmega', E') \\
+&+ q^{\dagger}(\vec{r}, \vOmega, E)\:,
+\end{align*}
+respectively, where $\psi(\vec{r}, \hat{\Omega}, E)$ is the angular neutron flux, $\Sigma_t$ is the total macroscopic cross section, $\Sigma_s$ is the double-differential scattering cross section, $q$ is a fixed source, and superscript $\dagger$ indicates adjoint quantities. 
+
+% explain Adjoint = Importance; point out this is a concept frequently used in variance reduction (some starting language?)\\
+The angular adjoint flux can represent a map of how every part of phase space will influence the answer we are looking for.
+That is $\psi$ represents how the source particles go forward and affect the rest of the problem space; $\psi^{\dagger}$ represents how the particles from a source come into the solution space and affect the answer. 
+
+explain Contributon = Response; give any context about use of contributons \\
 
 \section{PAST WORK}
 \label{sec::past}
 Highlight the CADIS method \\
 Highlight the FW-CADIS method \\
 Talk about what problems CADIS and FW-CADIS succeed in, then talk about where they fall short. \\
+
+Examples of variance reduction using importance maps include the weight window generator/weight window map (WWG) capability in the MCNP Monte Carlo code~\cite{brown_mcnp_2002}, and the FW/CADIS methods. Target weights in weight window maps are the inverse of the importance values for a given point in phase space.
+
+For problems with very strong anisotropies in the particle flux, such as the streaming found near the air vents of an individual cask or in between casks stored in an array pattern, the importance map and biased source developed using the space/energy treatment above may not represent the real importance well enough to sufficiently accelerate the Monte Carlo calculation. Notice that the angular dependence of the importance function is not retained, because otherwise the map would be very large (tens or hundreds of GB) and more costly and complex to use in the Monte Carlo simulation. 
+
+The drawback of this simplification is that, within a given space/energy cell, the map provides the average importance of a particle moving in any direction through the cell—excluding information about how particles move toward the objective. Consider the simple labyrinth example shown in Figure 1. For a source at the left entrance, the dose rate inside and outside of the labyrinth ranges over 12 orders of magnitude. Analog Monte Carlo would have to sample trillions of particles to get a few to the lowest dose regions. The space/energy treatment used in FW-CADIS makes this problem tractable but challenging. For particles near the turns in the labyrinth, the importance of the particles to the exit of the labyrinth vary greatly if they are coming out of a wall pointed toward the exit versus heading into a wall and away from the exit. This distinction is not captured by current hybrid methods. Including angular information in the importance map should significantly improve the Monte Carlo run time. 
+
 Introduce angle-informed and angle-biased methods. \\
 Higlight AVATAR + shortcomings \\
 Highlight Turner \& Larsen's method + shortcomings\\
+
+To do fast, accurate transport for used fuel monitoring, what is needed is an importance map generated quickly using deterministic methods that captures the impact of angle in the importance information. A variety of strategies for accomplishing this goal have been tried over the years. One such method is the Local Importance Function Transform (LIFT) method [10], which is derived from the zero-variance method and  uses an approximation of the adjoint flux that is piecewise continuous in angle. LIFT only captures linearly anisotropic scattering, which is not enough for our needs and is somewhat difficult to use [11].
+
+More recently, an attempt by Peplow et al. [12] to solve this problem used the maximum entropy distribution [13] to approximate the angular adjoint flux, , and showed improvement in some problems but very little in others. In that work, the angular component of the adjoint flux was approximated as separable and symmetric about the average adjoint current direction. We will refer to this method as simple angular CADIS. Two versions were implemented, one with (limited) directional source biasing and one without. The method without source biasing is effectively the method used by the AVATAR [14] code on a Cartesian mesh and on a tet-mesh in a code by Evans and Wareing [13]. 
+
+In Peplow et al.’s work, the improvement using simple angular CADIS over standard CADIS ranged from a factor of 0.09 to 3.3 over a collection of eight test problems, many of which have characteristics similar to used fuel cask monitoring systems. In all cases, CADIS and simple angular CADIS outperformed analog Monte Carlo. Peplow et al.’s study demonstrated that in many cases in which anisotropies are important, including angular information will improve calculation efficiency. However, these results also showed that the simple angular CADIS implementation is not accurate enough to provide the improvement necessary to be able to efficiently execute the used fuel cask calculations we would like to perform to improve facility monitoring design and operation. We therefore need to develop a better method for capturing the angular information.  
+	
+
+
 Conclude section with discussion of what is missing from CADIS/FW-CADIS/Angle Methods to motivate new method. \\
 
 %------------------------------------------------------------------------------
