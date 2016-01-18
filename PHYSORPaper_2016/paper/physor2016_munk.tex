@@ -76,11 +76,14 @@ This is our abstract
 \section{INTRODUCTION}
 \label{sect::intro}
 
-Motivate hybrid methods in general and anisotropicly-focus methods in particular\\
-We have developed a new method that builds on existing hybrid methods to tackle the anisotropic case; brief description of method \\
-Briefly how this method is novel compared to other methods\\
-Preview of results (tell 'em the punchline)\\
-Outline of paper (state what will be in each section)
+Motivate hybrid methods in general and anisotropically-focus methods in particular\\
+
+We have developed a new method that builds on existing hybrid methods to tackle the anisotropic case; this method builds on existing infrastructure to generate a forward-weighted adjoint scalar flux, based on a normalized contributon flux. 
+This method incorporates an angle-integrated contributon flux to generate the weighting parameters for existing hybrid methods, and, accordingly helps to generate biasing parameters for strongly anisotropic systems in deep-penetration radiation transport problems. 
+We present preliminary results for our proposed method for an optically-thick labyrinth problem for an analog case, a traditional CADIS case, and an angular CADIS case, which show that [Talk about the results that we have here]. 
+In this paper, we will begin with a brief background (Section \ref{sect::second}) of important concepts relating to variance reduction, and give a short description of existing hybrid methods for deep-penetration radiation transport.
+The following section, \ref{sect::methodology}, will describe the mathematical foundation of our proposed method (Section \ref{subsect::theory})and the software that we used to implement it (Section \ref{subsect::implementation}). 
+The results and accompanying discussion are described in Section \ref{sect::results}. Following this, in Section \ref{sect::future} we will present our future test phase-space, and describe how it covers various aspects of anisotropy for deep-penetration problems. We conclude in Section \ref{sect::conclusion} with a summary of our work. 
 
 
 %------------------------------------------------------------------------------
@@ -109,7 +112,7 @@ Conclude section with discussion of what is missing from CADIS/FW-CADIS/Angle Me
 %
 %------------------------------------------------------------------------------
 \section{METHODOLOGY}
-\label{sect::second}
+\label{sect::methodology}
 
 Introduce section with goal of our method. \\
 
@@ -117,9 +120,17 @@ Introduce section with goal of our method. \\
 %
 %------------------------------------------------------------------------------
 \subsection{Theory}
-\label{subsect::major}
+\label{subsect::theory}
 
 Show our method equation. \\
+
+
+\begin{equation} 
+\label{eq:angularhybrid}
+\phi^{+}(\vec{r},E) = \frac{\int \psi(\vec {r} ,E,\hat{\Omega})\psi^+(\vec {r} ,E,\hat{\Omega})d\hat\Omega }{\int\psi(\vec {r} ,E,\hat{\Omega})d\hat\Omega}
+\end{equation}
+
+
 Discuss how this relates to the concept of importance with the adjoint. \\
 Discuss how this relates to contributon response. \\
 Say physically how this helps us track in problems with strong anisotropy. \\
@@ -130,9 +141,9 @@ Highlight how this is different from past methods.
 %------------------------------------------------------------------------------
 
 \subsection{Implementation}
-\label{subsect::major}
+\label{subsect::implementation}
 
-We implemented this new method through the AutomateD VAriaNce reducTion Generator (ADVANTG)~\cite{mosher_new_2010} software developed at ORNL. 
+We implemented this new method through the AutomateD VAriaNce reducTion Generator (ADVANTG)~\cite{wagner_automated_2002, mosher_new_2010} software developed at ORNL. 
 ADVANTG automates the generation of the importance map and biased source distribution created using either the CADIS or FW-CADIS methods for use in MCNP5~\cite{brown_mcnp_2002}. 
 An input file in MCNP syntax is provided by the user in addition to some instructions for running ADVANTG. 
 ADVANTG uses this information to generate input file(s) and exectues the discrete ordinates solver Denovo~\cite{evans_denovo:_2010} in adjoint or forward and adjoint mode, as appropriate.
@@ -141,7 +152,7 @@ ADVANTG takes Denovo's output, executes the CADIS or FW-CADIS methods, and the f
 The primary objective of the development of ADVANTG has been to reduce both the user effort and the computational time required to obtain accurate and precise tally estimates
 across a broad range of challenging transport application areas.
 
-We chose to use the ADVANTG for several key reasons. 
+We chose to use ADVANTG for several key reasons. 
 The most important is that the implementation is nearly invisible to the user and therefore their experience of using this method will be nearly identical to using CADIS or FW-CADIS (which we will jointly refer to FW/CADIS).
 That is, the user simply adds an additional instruction asking to use the angle informed method and the interface does not change otherwise.
 This facilitates easy adoption.
@@ -151,12 +162,12 @@ Finally, it was simpler to implement the new method through ADVANTG than startin
 The major modifications required to implement this method were to Denovo. 
 The angular flux is typically not stored or written as the desired output is typically the scalar flux.
 The new method, however, requires the angular flux to create the scalar flux, and therefore Denovo was modified to store and write the angular flux.
-A new function was also added that takes the forward and adjoint fluxes and performs the integration indicated in eqn.~\eqref{}. 
+A new function was also added that takes the forward and adjoint fluxes and performs the integration indicated in eqn.~\eqref{angularhybrid}. 
 This set of scalar fluxes is then written the way any scalar flux output from Denovo would be.
 
 The benefit the bulk of the implementation being in Denovo is several fold. 
 From the standpoint of ADVANTG, there are very few differences between the new method and FW/CADIS and therefore implementation is straightforward.
-Further, anyone who finds a use for a scalar flux created as in eqn.~\eqref{} will now be able  access it.
+Further, anyone who finds a use for a scalar flux created as in eqn.~\eqref{angularhybrid} will now be able  access it.
 Finally, it might be useful to have access to the full angular flux. 
 Examining the angular flux for a problem could have research or pedagogical implications, and some other variance reduction method that uses the angular flux explicitly could be more easily developed in the future.
 
@@ -164,7 +175,7 @@ Examining the angular flux for a problem could have research or pedagogical impl
 %
 %------------------------------------------------------------------------------
 \section{RESULTS AND DISCUSSION} 
-\label{sect::references}
+\label{sect::results}
 
 Show test problem geometry
 \\ Show flux map from analog MC
@@ -183,9 +194,37 @@ Show test problem geometry
 %
 %------------------------------------------------------------------------------
 \section{FUTURE WORK} 
-\label{sect::references}
+\label{sect::future}
 
 Show the future test phase space we plan to cover. 
+
+The testing phase of this project aims to (1) characterize the method's performance in a variety of problems that have anisotropies, and (2) compare how well the method performs compared to traditional CADIS and FW-CADIS.
+The goal of the former is to determine in which situations the method performs best, and the latter aims to quantify the extent to which the method is successful. 
+Table \ref{tab:testprobs} summarizes a selection of test problems that have shown difficulty for CADIS and FW-CADIS as well as additional problems that the authors expect to have strong angular anisotropy. 
+In particular, problems where the direction of the particles is relevant to the importance of a cell will be relevant to characterizing the proposed method. 
+Each of these problems has some angular anisotropy, but have different physical means by which this anisotropy is created. 
+This selection of test problems should help to inform what types of larger systems and problems the method will be useful to optimize. 
+
+
+ \begin{table}
+  \centering
+  \caption{Proposed Test Problem Coverage}
+  \begin{tabular}{l|cccc}
+    \toprule
+    Problem Name & \multicolumn{4}{c}{Problem Coverage} \\
+    \hline
+    -- & Streaming Paths & Highly Scattering & Highly Heterogenous & Beam Problem \\
+    \hline
+    Streaming Channel   & X & & & X \\ 
+    Metal Plate         & X & X & X &  \\
+    Labyrinth Variants  & X & X & X &  \\ 
+    Spherical Boat      & X & & X & X \\  
+    Kobayashi Benchmark & X & X &  &  \\   
+	\bottomrule
+  \end{tabular}
+  \label{tab:testprobs}
+\end{table}
+
 
 
 %------------------------------------------------------------------------------
