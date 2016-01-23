@@ -96,13 +96,11 @@ Our new method uses a forward-weighted adjoint scalar flux based on a normalized
 This new integration scheme includes angular information in order to improve MC performance for problems with anisotropic particle fluxes.
 
 We have implemented this method and tested it on an optically-thick source-detector labyrinth demonstration problem. 
-This demonstration problems has characteristics that are particularly challenging for existing methods and provides an opportunity to deeply investigate differences between this new method and CADIS.
-As such, we compare an analog calculation, a standard CADIS calculation, and a new angular CADIS calculation
-% we need to use a real name here%
-, which show that [Talk about the results that we have here]. 
+This demonstration problem has characteristics that are particularly challenging for existing methods and provides an opportunity to deeply investigate differences between this new method and CADIS.
+As such, we compare an analog calculation, a standard CADIS calculation, and a new angular CADIS calculation, henceforth referred to as CADIS-$\Omega$, which shows that [Talk about the results that we have here]. 
 
 In this paper, we begin with a brief background (Section~\ref{sect::second}) of important concepts relating to variance reduction and existing hybrid methods for deep-penetration radiation transport.
-We then provide the context of existing methods in Section~\ref{sec::past}. 
+We then provide the context of existing methods in Section~\ref{sect::past}. 
 Section~\ref{sect::methodology} describes the mathematical foundation of our proposed method (Section~\ref{subsect::theory}) and the software that we used to implement it (Section~\ref{subsect::implementation}). 
 The results and accompanying discussion are described in Section~\ref{sect::results}. Following this, Section~\ref{sect::future} presents our future test plans and details how this plan will map out the application space beyond this single demonstration test. 
 We conclude in Section~\ref{sect::conclusion}. 
@@ -117,6 +115,7 @@ We conclude in Section~\ref{sect::conclusion}.
 This section provides the equations we are solving as well as background concepts that are used in many VR methods and ideas needed for our method in particular. 
 Many modern radiation transport codes offer variance reduction capabilities that employ an importance map\textemdash a measure of how important a particular particle in a Monte Carlo simulation is to the tally being computed\textemdash which is related to the adjoint form of the transport equation. 
 %Using this importance information, the Monte Carlo code can spend more time on important particles and less time on unimportant particles. This reduces the statistical variance in the final tally result for a given amount of computational time, providing better results in less time. 
+Our method's algorithm also incorporates a weighted variant of the contributon flux, which 
 Our new method also uses contributons, which (words about contributons) ~\cite{williams_contributorn_1992}. 
 
 %Write forward and adjoint importance equation and define terms\\
@@ -215,12 +214,12 @@ Finally, it was simpler to implement the new method through ADVANTG than startin
 The major modifications required to implement this method were to Denovo. 
 The angular flux is typically not stored or written as the desired output is typically the scalar flux.
 The new method, however, requires the angular flux to create the scalar flux, and therefore Denovo was modified to store and write the angular flux.
-A new function was also added that takes the forward and adjoint fluxes and performs the integration indicated in eqn.~\eqref{angularhybrid}. 
+A new function was also added that takes the forward and adjoint fluxes and performs the integration indicated in eqn.~\eqref{eq::angularhybrid}. 
 This set of scalar fluxes is then written the way any scalar flux output from Denovo would be.
 
 The benefit the bulk of the implementation being in Denovo is several fold. 
 From the standpoint of ADVANTG, there are very few differences between the new method and FW/CADIS and therefore implementation is straightforward.
-Further, anyone who finds a use for a scalar flux created as in eqn.~\eqref{angularhybrid} will now be able  access it.
+Further, anyone who finds a use for a scalar flux created as in eqn.~\eqref{eq::angularhybrid} will now be able  access it.
 Finally, it might be useful to have access to the full angular flux. 
 Examining the angular flux for a problem could have research or pedagogical implications, and some other variance reduction method that uses the angular flux explicitly could be more easily developed in the future.
 
@@ -230,26 +229,82 @@ Examining the angular flux for a problem could have research or pedagogical impl
 \section{RESULTS AND DISCUSSION} 
 \label{sect::results}
 
-Show test problem geometry
-\\ Show flux map from analog MC
-\\ Show flux uncertainties from analog MC
-\\ Show biasing parameter map from CADIS
-\\ Show flux map from CADIS
-\\ Show flux uncertainties from CADIS
-\\ Show Contributon Distributon from new method
-\\ Show biasing parameter distribution from new method
-\\ Show flux map from new method
-\\ Show flux uncertainties from new method
-\\ Discuss differences and meaning of differences of results and parameter maps
-\\ Discuss implications of these differences for solving other problems more generally
+As an initial approach to characterize the ability of CADIS-$\Omega$, we chose two labyrinth test problems, which are shown in Figure \ref{fig::fwdflux}. These problems were chosen because of their wide coverage of generating anisotropy in the flux, which is described further in Section \ref{sect::future}. In these test problems, we performed an analog, CADIS, and CADIS-$\Omega$ calculation to optimize the response in the NaI detector. We compared the tally result, the relative uncertainty and the FOM of the response tally (f4) for all three calculations. To understand more about the differences in the performance between CADIS and CADIS-$\Omega$, we also present a comparison between the flux maps generated with the two methods. 
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=0.10\textwidth]{./images/scale.png}
+    \includegraphics[width=0.80\textwidth]{./images/forward_flux.png}
+    \includegraphics[width=0.80\textwidth]{./images/maze2_forward_group00_adjusted.png}
+    \caption[]{\label{fig::fwdflux}Forward flux generated by Denovo for labyrinth problems I and II. A multi-legged air duct through a shield with a point source at (-75, 0, 0) and a NaI detector behind the shield. Labyrinth I has a Li-doped polyethylene shield, and labyrinth II has a concrete shield.}
+  \end{center}
+\end{figure}
+
+Figure \ref{fig::fwdflux} shows the forward fluxes for two representative problem geometries. Both geometries have a 10MeV point source at -75, 0, 0 with reflective outer boundary conditions, as well as a NaI detector behind the shield. Labyrinth I has a Li- doped polyethylene shield, and labyrinth II has a concrete shield. The geometry of labyrinth II has been known to be troublesome for CADIS in the literature [REFERENCE HERE], and labyrinth I was chosen due to its similar characteristics to labyrinth II. 
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=0.49\textwidth]{./images/maze2_spectra.png}
+    \includegraphics[width=0.49\textwidth]{./images/maze2_RE.png}
+    \caption[]{\label{fig::tallyresponse} Tally response and relative uncertainties in tally in NaI detector for the labyrinth II problem. }
+  \end{center}
+\end{figure}
+
+The tally response and relative uncertainties for the NaI detector in labyrinth II are shown in Figure \ref{fig::tallyresponse}. CADIS-$\Omega$ has a lower relative error than CADIS for lower energy bins, but a higher relative error for higher energy bins. This is likely due to the degree of anisotropy of the flux near the detector for the different energy groups. Comparing the adjoint fluxes generated by CADIS and CADIS-$\Omega$ in group 26 (Figure \ref{fig::adjoint_fluxes_group26}), we see a strong effect. The majority of the group 26 neutrons that contribute to the detector response are reflected off of the back and bottom walls. Conversely, this effect is not as prominent in group 11, as illustrated in Figure \ref{fig::adjoint_fluxes_group11}. This is likely due to the differences in the survival probability of a group 11 neutron compared to a group 26 neutron hitting the concrete wall. The group 11 neutrons are far more likely to return to the detector after hitting the concrete wall, resulting in a more locally-isotropic flux near the detector than in group 26. As a result, the group 11 CADIS-$\Omega$ adjoint fluxes more closely match the adjoint fluxes generated by CADIS. 
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=0.80\textwidth]{./images/maze2_adjoint_group26_adjusted.png}
+    \includegraphics[width=0.80\textwidth]{./images/maze2_myflux_group26_adjusted.png}
+    \caption[]{\label{fig::adjoint_fluxes_group26}Adjoint flux generated by Denovo (left) and flux generated with forward-weighting (right) from CADIS-$\Omega$ for labyrinth II geometry.}
+  \end{center}
+\end{figure}
+
+By adjusting the scales of the adjoint flux generated by CADIS and CADIS-$\Omega$, one can compare the biasing parameters for each problem. Figure \ref{fig::adjoint_fluxes_group26} adjusts the scales for labyrinth II in group 26, and Figure \ref{fig::adjoint_fluxes_group11} do so for group 11. It is quite noticeable that the majority of particles contributing to the NaI detector response in group 26 are reflected off of the right- and bottom- boundaries. This effect is also visible in figure \ref{fig::adjoint_fluxes_group11}, but is not as strong. As mentioned in Section \ref{subsect::theory}, the strength of this method is that it biases particles in the direction that they will actually be moving, rather than just towards the adjoint source. 
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=0.80\textwidth]{./images/maze2_adjoint_group11_adjusted.png}
+    \includegraphics[width=0.80\textwidth]{./images/maze2_myflux_group11_adjusted.png}
+    \caption[]{\label{fig::adjoint_fluxes_group11}Adjoint flux generated by Denovo (left) and flux generated with forward-weighting (right) from CADIS-$\Omega$ for labyrinth II geometry.}
+  \end{center}
+\end{figure}
+
+% Discuss differences and meaning of differences of results and parameter maps \\
+% Discuss implications of these differences for solving other problems more generally \\
+
+
+ \begin{table}
+  \centering
+  \caption{\label{tab:FOMLabI}FOMs for Labyrinth Problems}
+  \begin{tabular}{l|cc|cc}
+    \toprule
+        & \multicolumn{2}{c}{Labyrinth I} & \multicolumn{2}{c}{Labyrinth II}  \\
+    \hline
+        & FOM$_{MC}$ & FOM$_{adjusted}$ & FOM$_{MC}$ & FOM$_{adjusted}$ \\
+    \hline
+    Analog           & 26    &  26  & 538 & 538 \\ 
+    CADIS            & 1419  &  799 & 31  &  9  \\
+    CADIS-$\Omega$   & 1282  &  248 & 354 & 94  \\  
+	\bottomrule
+  \end{tabular}
+\end{table}
+
+% Note: these FOMs don't really make sense to me. Why is the analog problem so good in Labyrinth II but not in I? Is the material choice of the shield really that significant? That's the only thing I can come up with to explain this. I guess 100cm of concrete is possible for neutrons to make it through, but the poly has such a strong absorber in the Li that it makes it more difficult to penetrate. 
+
+
+Table \ref{tab:FOMLabI} reports the results for the two problems with the FOM from the Monte Carlo simulation alone, and the adjusted FOM to incorporate the runtimes for deterministic transport. It is notable that even with the incorporated determinsitic transport calculations, the biased calculations perform significantly better than the analog problem for labyrinth I but not labyrinth II. We belive that this is due to the high absorption in the shield in labyrinth I, but less so for labyrinth II. For a simple problem with the fairly refined angular and spatial discretization we chose, the deterministic calculation time is not trivial. Because CADIS-$\Omega$ uses two deterministic transport calculations and not exclusively the adjoint solution as CADIS does, incorporating the increased time for the calculation is necessary for a fair comparison.
+
+Table \ref{tab:FOMLabI} also shows that CADIS-$\Omega$ outperforms CADIS in labyrinth II, and performs more poorly than CADIS in labyrinth I. This is likely due to the large number of turns in labyrinth I. Any neutron that does make it through labyrinth I is likely to have scattered several times, rendering the flux throughout the maze channels to be relatively isotropic, reducing the effect of the method. However, this effect is not as significant in labyrinth II as it is in labyrinth I, which is likely why CADIS-$\Omega$ outperforms CADIS in this problem. More broadly, we expect that this method will perform well in problems with strong streaming paths and more poorly in problems with significant scattering effects. 
+ 
+
 
 %------------------------------------------------------------------------------
 %
 %------------------------------------------------------------------------------
 \section{FUTURE WORK} 
 \label{sect::future}
-
-Show the future test phase space we plan to cover. 
+ 
 
 The testing phase of this project aims to (1) characterize the method's performance in a variety of problems that have anisotropies, and (2) compare how well the method performs compared to traditional CADIS and FW-CADIS.
 The goal of the former is to determine in which situations the method performs best, and the latter aims to quantify the extent to which the method is successful. 
