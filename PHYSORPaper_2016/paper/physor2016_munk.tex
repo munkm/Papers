@@ -75,6 +75,11 @@
 This is our abstract
 \end{abstract}
 
+% should we reference the two papers that one of our reviewers suggested? Even though they don't have to do with deep-penetration RT? 
+% Is FOM equation wrong? 
+% Should we consider only putting in labyrinth II results? 
+% I'm worried about presenting the timing of all of the problems I ran. For labyrinth I, they were 3 minutes, 46 minutes, and 6 minutes. For Labyrinth II they were 5 minutes, 19 minutes, and 30 minutes. 
+
 \keywords{Hybrid Methods, CADIS, FW-CADIS, Angular Biasing}
 
 %------------------------------------------------------------------------------
@@ -112,8 +117,8 @@ We conclude in Section~\ref{sect::conclusion}.
 \section{BACKGROUND}
 \label{sect::second}
 
-This section provides the equations we are solving as well as background concepts that are used in many VR methods and ideas needed for our method in particular. 
-Many modern radiation transport codes offer variance reduction capabilities that employ an importance map\textemdash a measure of how important a particular region in a Monte Carlo simulation is to the tally being computed\textemdash to perform variance reduction. A particularly effective method to generate an importance map is related to the adjoint form of the transport equation, shown in eq. \eqref{eq:adjtransport}. 
+% This section provides the equations we are solving as well as background concepts that are used in many VR methods and ideas needed for our method in particular. 
+Many modern radiation transport codes offer variance reduction capabilities that employ an importance map\textemdash a measure of how important a particular region in a Monte Carlo simulation is to the tally being computed\textemdash to perform variance reduction. A particularly effective method to generate an importance map is related to the adjoint form of the transport equation, shown below. 
 %Using this importance information, the Monte Carlo code can spend more time on important particles and less time on unimportant particles. This reduces the statistical variance in the final tally result for a given amount of computational time, providing better results in less time. 
 Our method's algorithm also incorporates a weighted variant of the contributon flux, which 
 Our new method also uses contributons, which (words about contributons) ~\cite{williams_contributorn_1992}. 
@@ -121,12 +126,12 @@ Our new method also uses contributons, which (words about contributons) ~\cite{w
 %Write forward and adjoint importance equation and define terms\\
 The steady state, fixed-source forms of the forward and adjoint transport equation are
 
-\begin{align}
-\bigl[\hat{\Omega} \cdot \nabla + \Macro_t(\vec{r}, E)\bigr] \psi(\vec{r}, \hat{\Omega}, E)  =  \int_0^{\infty} dE' &\int_{4\pi} d\hat{\Omega'} \:\Macro_{s}(\vec{r}, E' \to E, \hat{\Omega'} \cdot \hat{\Omega}) \psi(\vec{r}, \hat{\Omega'}, E') + q(\vec{r}, \vOmega, E) \label{eq:fwdtransport} \\
+\begin{align*}
+\bigl[\hat{\Omega} \cdot \nabla + \Macro_t(\vec{r}, E)\bigr] \psi(\vec{r}, \hat{\Omega}, E)  =  \int_0^{\infty} dE' &\int_{4\pi} d\hat{\Omega'} \:\Macro_{s}(\vec{r}, E' \to E, \hat{\Omega'} \cdot \hat{\Omega}) \psi(\vec{r}, \hat{\Omega'}, E') + q(\vec{r}, \vOmega, E) \\
 %
 \bigl[-\vOmega \cdot \nabla + \Sigma_t(\rvec, E)\bigr] \psi^{\dagger}(\vec{r}, \vOmega, E) = \int_0^{\infty} dE' &\int_{4\pi} d\vOmega' \: \Sigma_s(\rvec, E \rightarrow E', \vOmega \cdot \vOmega') \psi^{\dagger}(\rvec, \vOmega', E') \\
-&+ q^{\dagger}(\vec{r}, \vOmega, E)  \label{eq:adjtransport} \:, 
-\end{align}
+&+ q^{\dagger}(\vec{r}, \vOmega, E) \:, 
+\end{align*}
 
 respectively, where $\psi(\vec{r}, \hat{\Omega}, E)$ is the angular neutron flux, $\Sigma_t$ is the total macroscopic cross section, $\Sigma_s$ is the double-differential scattering cross section, $q$ is a fixed source, and superscript $\dagger$ indicates adjoint quantities. 
 
