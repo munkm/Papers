@@ -305,14 +305,7 @@ Table \ref{tab:FOMLabI} also shows that CADIS-$\Omega$ outperforms CADIS in laby
 \section{FUTURE WORK} 
 \label{sect::future}
  
-
-The testing phase of this project aims to (1) characterize the method's performance in a variety of problems that have anisotropies, and (2) compare how well the method performs compared to traditional CADIS and FW-CADIS.
-The goal of the former is to determine in which situations the method performs best, and the latter aims to quantify the extent to which the method is successful. 
-Table \ref{tab:testprobs} summarizes a selection of test problems that have shown difficulty for CADIS and FW-CADIS as well as additional problems that the authors expect to have strong angular anisotropy. 
-In particular, problems where the direction of the particles is relevant to the importance of a cell will be relevant to characterizing the proposed method. 
-Each of these problems has some angular anisotropy, but have different physical means by which this anisotropy is created. 
-This selection of test problems should help to inform what types of larger systems and problems the method will be useful to optimize. 
-
+Section \ref{sect::results} showed that CADIS-$\Omega$ can outperform CADIS in a problem with a strong degree of angular anisotropy in the flux. However, there are a number of physical means by which angular anisotropy in the flux might occur. To further characterize the performance of CADIS-$\Omega$ and FW-CADIS-$\Omega$ throughout all of these problems, we have developed a suite of test problems that should help quantify the success of the method. The testing phase space identified in Table \ref{tab:testprobs} summarizes a sampling this problem space. As noted in Section \ref{sect::results}, problems where the direction of particles is important to the importance of a cell are where we anticipate the strength to lie in CADIS-$\Omega$. These problems aim to address all of the physical means by which the flux could become strongly anisotropic, and some have also have shown to be difficult for traditional FW/CADIS. 
 
  \begin{table}
   \centering
@@ -333,7 +326,9 @@ This selection of test problems should help to inform what types of larger syste
   \label{tab:testprobs}
 \end{table}
 
+After FW/CADIS-$\Omega$ has been fully characterized throughout the phase space identified in Table \ref{tab:testprobs}, it will be tested with scaling problems. Scaling problems can be developed to target areas that FW/CADIS-$\Omega$ performed successfully in the characterization stage. We anticipate performing scaling studies on realistic, large-scale shielding problems, such as a dry cask storage bed. These scaling studies will help to inform users and developers how practical the method will be for use on a larger scale. 
 
+As with the simple problems performed in Section \ref{sect::results}, the results of FW/CADIS-$\Omega$ will be compared to traditional FW/CADIS. The FOM, the tally uncertainty distribution, and the tally results will be indicators of the success of the -$\Omega$ methods. 
 
 %------------------------------------------------------------------------------
 %
@@ -344,6 +339,8 @@ This selection of test problems should help to inform what types of larger syste
 Recap what we told them (what problem we're trying to solve; about this method; how it's different than past methods)\\
 Recap problem we solved and results\\
 Strong punchline paragraph about potential impact based on theory and these results.
+
+The testing phase of this project aims to (1) characterize the method's performance in a variety of problems that have anisotropies, and (2) compare how well the method performs compared to traditional CADIS and FW-CADIS.
 
 %------------------------------------------------------------------------------
 %
