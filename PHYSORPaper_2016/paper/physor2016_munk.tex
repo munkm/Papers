@@ -118,13 +118,7 @@ We conclude in Section~\ref{sect::conclusion}.
 \label{sect::second}
 
 % This section provides the equations we are solving as well as background concepts that are used in many VR methods and ideas needed for our method in particular. 
-Many modern radiation transport codes offer variance reduction capabilities that employ an importance map\textemdash a measure of how important a particular region in a Monte Carlo simulation is to the tally being computed\textemdash to perform variance reduction. A particularly effective method to generate an importance map is related to the adjoint form of the transport equation, shown below. 
-%Using this importance information, the Monte Carlo code can spend more time on important particles and less time on unimportant particles. This reduces the statistical variance in the final tally result for a given amount of computational time, providing better results in less time. 
-Our method's algorithm also incorporates a weighted variant of the contributon flux, which 
-Our new method also uses contributons, which (words about contributons) ~\cite{williams_contributorn_1992}. 
-
-%Write forward and adjoint importance equation and define terms\\
-The steady state, fixed-source forms of the forward and adjoint transport equation are
+Many modern radiation transport codes offer variance reduction capabilities that employ an importance map\textemdash a measure of how important a particular region in a Monte Carlo simulation is to the tally being computed\textemdash to perform variance reduction. Importance maps can be generated in a number of methods, but a particularly effective method to generate an importance map is related to the adjoint form of the transport equation. The steady state, fixed-source forms of the forward and adjoint transport equation are
 
 \begin{align*}
 \bigl[\hat{\Omega} \cdot \nabla + \Macro_t(\vec{r}, E)\bigr] \psi(\vec{r}, \hat{\Omega}, E)  =  \int_0^{\infty} dE' &\int_{4\pi} d\hat{\Omega'} \:\Macro_{s}(\vec{r}, E' \to E, \hat{\Omega'} \cdot \hat{\Omega}) \psi(\vec{r}, \hat{\Omega'}, E') + q(\vec{r}, \vOmega, E) \\
@@ -135,9 +129,15 @@ The steady state, fixed-source forms of the forward and adjoint transport equati
 
 respectively, where $\psi(\vec{r}, \hat{\Omega}, E)$ is the angular neutron flux, $\Sigma_t$ is the total macroscopic cross section, $\Sigma_s$ is the double-differential scattering cross section, $q$ is a fixed source, and superscript $\dagger$ indicates adjoint quantities. 
 
+In particular, the adjoint transport equation differs from the forward equation in that particles are scattered up in energy, from E to E', and are reversed in direction, from $\vOmega$ to $\vOmega'$. The definition of the adjoint source, $q^{\dagger}$, depends on the nature of the problem being solved. The solution of the forward and adjoint transport equations yield the fluxes, $\psi$ and $\psi^{\dagger}$, respectively. Physically, $\psi$ represents how the source particles go forward and affect the rest of the problem space; $\psi^{\dagger}$ represents how the particles from a source come into the solution space and affect the answer. In this way, the angular adjoint flux can represent a map of how every part of phase space will influence the answer we are looking for.
+
+%Using this importance information, the Monte Carlo code can spend more time on important particles and less time on unimportant particles. This reduces the statistical variance in the final tally result for a given amount of computational time, providing better results in less time. 
+Our method's algorithm also incorporates a weighted variant of the contributon flux, which 
+Our new method also uses contributons, which (words about contributons) ~\cite{williams_contributorn_1992}. 
+
+%Write forward and adjoint importance equation and define terms\\
+
 % explain Adjoint = Importance; point out this is a concept frequently used in variance reduction (some starting language?)\\
-The angular adjoint flux can represent a map of how every part of phase space will influence the answer we are looking for.
-That is $\psi$ represents how the source particles go forward and affect the rest of the problem space; $\psi^{\dagger}$ represents how the particles from a source come into the solution space and affect the answer. 
 
 explain Contributon = Response; give any context about use of contributons \\
 
@@ -190,7 +190,7 @@ Both CADIS and FW-CADIS use an adjoint scalar flux to generate biasing parameter
 
 This method differs from existing hybrid methods in that it uses a differing quantity than the adjoint scalar flux to generate the biasing parameters. This flux, the flux-$\Omega$ ($\phi^{+}_{\Omega}$), has the same units as the basic adjoint scalar flux, but is weighted differently. In a strongly anisotropic system, the adjoint flux of eq. \eqref{eq:angularhybrid} will be dominated by the adjoint flux quantity in directions of a strong forward-flux direction. In an extremely isotropic system, the $\phi^{+}_{\Omega}$ will be essentially the same quantity as $\phi^{+}$ generated in a deterministic adjoint simulation. In this manner, particles will be preferentially transported in the direction that they will actually be moving, rather than exclusively towards the adjoint source. This should allow for a more effective monte carlo transport, and a more optimized variance reduction. 
 
-We can also consider this method from another perspective: the contributon flux. The numerator of eq. \eqref{eq:angularhybrid} is identified in the literature as the contributon flux, which, as described in Section \ref{sect::second}, represents the flux of response particles in a system. Contributons, then, are particles that will likely make it from the forward source to the detector to generate a response. An importance map generated by the adjoint flux will differ significantly from a flux generated with a contributon flux map. The importance map from the adjoint flux will merely have greater importance with increasing proximity to the adjoint source, while the imporance map generated from the contributon flux will have strong importances in regions important to both the forward- and adjoint- fluxes. 
+We can also consider this method from another perspective: the contributon flux ~\cite{williams_contributorn_1992}. The numerator of eq. \eqref{eq:angularhybrid} is identified in the literature as the contributon flux, which, as described in Section \ref{sect::second}, represents the flux of response particles in a system. Contributons, then, are particles that will likely make it from the forward source to the detector to generate a response. An importance map generated by the adjoint flux will differ significantly from a flux generated with a contributon flux map. The importance map from the adjoint flux will merely have greater importance with increasing proximity to the adjoint source, while the imporance map generated from the contributon flux will have strong importances in regions important to both the forward- and adjoint- fluxes. 
 
 The theory behind our proposed method is well-characterized in the literature, and we anticipate this melding of the adjoint- and contributon- fluxes to be beneficial for generating variance reduction parameters in highly anisotropic systems. Furthermore, this variant of the adjoint scalar flux has not been proposed in the literature. To calculate the quantity in eq. \eqref{eq:angularhybrid}, full angular flux maps of both the forward- and adjoint- problems will be required. Further, an extra deterministic calculation (a forward calculation) will be required for CADIS-$\Omega$ calculations.
 
@@ -231,7 +231,7 @@ This set of scalar fluxes is then written the same way as any scalar flux output
 
 The benefit the bulk of the implementation being in Denovo is several fold. 
 From the standpoint of ADVANTG, there are very few differences between the new method and FW/CADIS and therefore implementation is straightforward.
-Further, anyone who finds a use for a scalar flux created as in eqn.~\eqref{eq::angularhybrid} will now be able  access it.
+Further, anyone who finds a use for a scalar flux created as in eq.~\eqref{eq:angularhybrid} will now be able  access it.
 Finally, it might be useful to have access to the full angular flux. 
 Examining the angular flux for a problem could have research or pedagogical implications, and some other variance reduction method that uses the angular flux explicitly could be more easily developed in the future.
 
