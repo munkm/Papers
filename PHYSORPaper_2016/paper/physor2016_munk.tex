@@ -90,24 +90,25 @@ This is our abstract
 
 Efficiently modeling radiation transport in deep penetration shielding problems is essential to the safe operation of many types of nuclear facilities as well as the development of monitoring and detection systems. We would like to be able to perform such calculations with Monte Carlo (MC) methods, but it can be quite challenging to obtain acceptable statistical uncertainties in the computed tallies. Thus, many variance reduction (VR) strategies, some of which we will discuss, have been developed to facilitate accurate calculations in reasonable times. 
 
-Problems that exhibit a strong degree of angular anisotropy in particle flux, however, tend to be even more challenging for effective VR.
+Problems that exhibit a strong degree of angular anisotropy in particle flux tend to be even more challenging for effective VR.
 Many existing VR methods do not include angular information in their techniques, and therefore do not work well for these problems.  
-Some VR methods do include angular information, but in general these methods have challenges in breadth of applicability or ease of use that make them inadequate as broad tools, or are too costly to use reliably in practice.
+Some VR methods do include angular information, but, in general, these methods have narrow applicability and/or are difficult to use\textemdash rendering them inadequate as general tools\textemdash or are computationally costly.
 
-With the goal of filling some of these gaps, we have developed a new method that builds on the Consistent Adjoint Driven Importance Sampling (CADIS) and Forward Weighted-CADIS (FW-CADIS) methods~\cite{wagner_forward-weighted_2007} to tackle fixed-source problems that exhibit a high degree of angular anisotropy. 
-This method builds on existing software infrastructure in a way that facilitates easy adoption.
-CADIS and FW-CADIS, which we will jointly refer to FW/CADIS, use scalar flux estimates from a deterministic calcualtion to create VR parameters for use in MC.
-Our new method uses a forward-weighted adjoint scalar flux based on a normalized contributon flux instead of a standard scalar flux.
-This new integration scheme includes angular information in order to improve MC performance for problems with anisotropic particle fluxes.
+With the goal of developing a method to easily, reliably, and inexpensively solve fixed-source problems that exhibit a high degree of angular anisotropy, we have developed a new method that builds on the Consistent Adjoint Driven Importance Sampling (CADIS) and Forward Weighted-CADIS (FW-CADIS) methods~\cite{wagner_forward-weighted_2007}, which we will jointly refer to FW/CADIS. 
+%The new method builds on existing software infrastructure in a way that facilitates easy adoption.
+FW/CADIS uses scalar flux estimates from a deterministic calculation to create VR parameters for use in MC.
+Our new method uses a forward-weighted adjoint scalar flux based on a normalized contributon flux instead of a standard adjoint scalar flux, thereby including more angular information. 
+We are calling the new method CADIS-$\Omega$, and FW/CADIS-$\Omega$ for both methods jointly.
 
-We have implemented this method and tested it in two optically-thick source-detector labyrinth demonstration problems. 
-These demonstration problems have characteristics that are particularly challenging for existing methods and provide an opportunity to start investigating differences between this new method and CADIS.
-As such, we compare an analog calculation, a standard CADIS calculation, and a new angular CADIS calculation, henceforth referred to as CADIS-$\Omega$ (and FW/CADIS-$\Omega$ for both methods jointly). Initial results for these two geometries shows that for problems with strongly anisotropic behavior, CADIS-$\Omega$ outperforms traditional CADIS.
+We have implemented CADIS-$\Omega$ and tested it on an optically-thick source-detector labyrinth demonstration problem.
+This demonstration problem has characteristics that are particularly challenging for existing methods and provides an opportunity to deeply investigate differences between this new method and CADIS.
+We compare analog, standard CADIS, and CADIS-$\Omega$ calculations. 
+Initial results show that for problems with strongly anisotropic behavior, CADIS-$\Omega$ outperforms traditional CADIS.
 
-In this paper, we begin with a brief background (Section~\ref{sect::second}) of important concepts relating to variance reduction and existing hybrid methods for deep-penetration radiation transport.
+This paper begins with a background (Section~\ref{sect::second}) of important concepts relating to variance reduction and existing hybrid methods for deep-penetration radiation transport. 
 We then provide the context of existing methods in Section~\ref{sect::past}. 
-Section~\ref{sect::methodology} describes the mathematical foundation of our proposed method (Section~\ref{subsect::theory}) and the software that we used to implement it (Section~\ref{subsect::implementation}). 
-The results and accompanying discussion are described in Section~\ref{sect::results}. Following this, Section~\ref{sect::future} presents our future test plans and details how this plan will map out the application space beyond this single demonstration test. 
+Section~\ref{sect::methodology} describes the mathematical foundation of our proposed method and the software that we used to implement it. 
+The results and accompanying discussion are described in Section~\ref{sect::results}. Following this, Section~\ref{sect::future} presents our future test plans and details how this plan characterize the application space beyond this single demonstration test. 
 We conclude in Section~\ref{sect::conclusion}. 
 
 
@@ -121,7 +122,8 @@ We conclude in Section~\ref{sect::conclusion}.
 
 Many modern radiation transport codes offer variance reduction capabilities that employ an importance map\textemdash a measure of how important a particular region in a Monte Carlo simulation is to the tally being computed\textemdash to perform variance reduction. Generally, the importance of a cell can be defined as the ratio between the total score of particles entering the cell to the total weight of the cell \cite{booth_automatic_1982}. By generating an effective importance map for a system, the Monte Carlo calculation will be more efficient, yielding a faster time to solution and a reduced variance. 
 
-Importance maps can be generated by a number of means, but a particularly effective method is related to the adjoint form of the transport equation. The solution to the adjoint equation has long been recognized as an Kalos \cite{kalos_importance_1963, goertzel_monte_1958} and others showed that an exact solution to the adjoint equation would result in a zero variance Monte Carlo solution. 
+Importance maps can be generated by a number of means, but a particularly effective method is related to the adjoint form of the transport equation. The solution to the adjoint equation has long been recognized as 
+In fact, Kalos \cite{kalos_importance_1963, goertzel_monte_1958} and others showed that an exact solution to the adjoint equation would result in a zero variance Monte Carlo solution. 
 
 %Find good wording here to really emphasize adjoint = importance. 
 
