@@ -25,7 +25,7 @@
 %------------------------------------------------------------------------------
 % Define title. Use all CAPITALS.
 %------------------------------------------------------------------------------
-\title{AN ANGLE-INFORMED HYBRID METHOD FOR DEEP-PENETRATION RADIATION TRANSPORT APPLIED TO CADIS AND FW-CADIS}
+\title{CADIS-$\Omega$: AN ANGLE-INFORMED HYBRID METHOD FOR DEEP-PENETRATION RADIATION TRANSPORT}
 %
 % ...and authors
 %
@@ -90,24 +90,25 @@ This is our abstract
 
 Efficiently modeling radiation transport in deep penetration shielding problems is essential to the safe operation of many types of nuclear facilities as well as the development of monitoring and detection systems. We would like to be able to perform such calculations with Monte Carlo (MC) methods, but it can be quite challenging to obtain acceptable statistical uncertainties in the computed tallies. Thus, many variance reduction (VR) strategies, some of which we will discuss, have been developed to facilitate accurate calculations in reasonable times. 
 
-Problems that exhibit a strong degree of angular anisotropy in particle flux, however, tend to be even more challenging for effective VR.
+Problems that exhibit a strong degree of angular anisotropy in particle flux tend to be even more challenging for effective VR.
 Many existing VR methods do not include angular information in their techniques, and therefore do not work well for these problems.  
-Some VR methods do include angular information, but in general these methods have challenges in breadth of applicability or ease of use that make them inadequate as broad tools, or are too costly to use reliably in practice.
+Some VR methods do include angular information, but, in general, these methods have narrow applicability and/or are difficult to use\textemdash rendering them inadequate as general tools\textemdash or are computationally costly.
 
-With the goal of filling some of these gaps, we have developed a new method that builds on the Consistent Adjoint Driven Importance Sampling (CADIS) and Forward Weighted-CADIS (FW-CADIS) methods~\cite{wagner_forward-weighted_2007} to tackle fixed-source problems that exhibit a high degree of angular anisotropy. 
-This method builds on existing software infrastructure in a way that facilitates easy adoption.
-CADIS and FW-CADIS, which we will jointly refer to FW/CADIS, use scalar flux estimates from a deterministic calcualtion to create VR parameters for use in MC.
-Our new method uses a forward-weighted adjoint scalar flux based on a normalized contributon flux instead of a standard scalar flux.
-This new integration scheme includes angular information in order to improve MC performance for problems with anisotropic particle fluxes.
+With the goal of developing a method to easily, reliably, and inexpensively solve fixed-source problems that exhibit a high degree of angular anisotropy, we have developed a new method that builds on the Consistent Adjoint Driven Importance Sampling (CADIS) and Forward Weighted-CADIS (FW-CADIS) methods~\cite{wagner_forward-weighted_2007}, which we will jointly refer to FW/CADIS. 
+%The new method builds on existing software infrastructure in a way that facilitates easy adoption.
+FW/CADIS uses scalar flux estimates from a deterministic calculation to create VR parameters for use in MC.
+Our new method uses a forward-weighted adjoint scalar flux based on a normalized contributon flux instead of a standard adjoint scalar flux, thereby including more angular information. 
+We are calling the new method CADIS-$\Omega$, and FW/CADIS-$\Omega$ for both methods jointly.
 
-We have implemented this method and tested it in two optically-thick source-detector labyrinth demonstration problems. 
-These demonstration problems have characteristics that are particularly challenging for existing methods and provide an opportunity to start investigating differences between this new method and CADIS.
-As such, we compare an analog calculation, a standard CADIS calculation, and a new angular CADIS calculation, henceforth referred to as CADIS-$\Omega$ (and FW/CADIS-$\Omega$ for both methods jointly). Initial results for these two geometries shows that for problems with strongly anisotropic behavior, CADIS-$\Omega$ outperforms traditional CADIS.
+We have implemented CADIS-$\Omega$ and tested it on an optically-thick source-detector labyrinth demonstration problem.
+This demonstration problem has characteristics that are particularly challenging for existing methods and provides an opportunity to deeply investigate differences between this new method and CADIS.
+We compare analog, standard CADIS, and CADIS-$\Omega$ calculations. 
+Initial results show that for problems with strongly anisotropic behavior, CADIS-$\Omega$ outperforms traditional CADIS.
 
-In this paper, we begin with a brief background (Section~\ref{sect::second}) of important concepts relating to variance reduction and existing hybrid methods for deep-penetration radiation transport.
+This paper begins with a background (Section~\ref{sect::second}) of important concepts relating to variance reduction and existing hybrid methods for deep-penetration radiation transport. 
 We then provide the context of existing methods in Section~\ref{sect::past}. 
-Section~\ref{sect::methodology} describes the mathematical foundation of our proposed method (Section~\ref{subsect::theory}) and the software that we used to implement it (Section~\ref{subsect::implementation}). 
-The results and accompanying discussion are described in Section~\ref{sect::results}. Following this, Section~\ref{sect::future} presents our future test plans and details how this plan will map out the application space beyond this single demonstration test. 
+Section~\ref{sect::methodology} describes the mathematical foundation of our proposed method and the software that we used to implement it. 
+The results and accompanying discussion are described in Section~\ref{sect::results}. Following this, Section~\ref{sect::future} presents our future test plans and details how this plan characterize the application space beyond this single demonstration test. 
 We conclude in Section~\ref{sect::conclusion}. 
 
 
@@ -117,36 +118,52 @@ We conclude in Section~\ref{sect::conclusion}.
 \section{BACKGROUND}
 \label{sect::second}
 
-% This section provides the equations we are solving as well as background concepts that are used in many VR methods and ideas needed for our method in particular. 
+Many modern radiation transport codes offer variance reduction capabilities that employ an importance map\textemdash a measure of how important a particular region in a Monte Carlo simulation is to the tally being computed\textemdash to perform variance reduction. Generally, the importance of a cell can be defined as the ratio between the total score of particles entering the cell to the total weight of the cell \cite{booth_automatic_1982}. By generating an effective importance map for a system, the Monte Carlo calculation will have faster time to solution, a reduced variance, or both. 
 
-Many modern radiation transport codes offer variance reduction capabilities that employ an importance map\textemdash a measure of how important a particular region in a Monte Carlo simulation is to the tally being computed\textemdash to perform variance reduction. Generally, the importance of a cell can be defined as the ratio between the total score of particles entering the cell to the total weight of the cell \cite{booth_automatic_1982}. By generating an effective importance map for a system, the Monte Carlo calculation will be more efficient, yielding a faster time to solution and a reduced variance. 
+Importance maps can be generated by a number of means, but a particularly effective method is to use the adjoint solution to the transport equation in the map creation. 
+The solution to the adjoint equation has long been recognized as 
+% What words did you want here? I'm putting in this to have something.
+directly corresponding to how influential a given source particle will be on the defined as the adjoint source.
+In fact, Kalos \cite{kalos_importance_1963, goertzel_monte_1958} and others have shown that an exact solution to the adjoint equation would result in a zero variance Monte Carlo solution. 
 
-Importance maps can be generated by a number of means, but a particularly effective method is related to the adjoint form of the transport equation. The solution to the adjoint equation has long been recognized as an Kalos \cite{kalos_importance_1963, goertzel_monte_1958} and others showed that an exact solution to the adjoint equation would result in a zero variance Monte Carlo solution. 
+The steady state, fixed-source forms of the forward and adjoint transport equation are shown in Eqns.~\ref{eq:forward} and \ref{eq:adjoint}, respectively, where $\psi(\vec{r}, \hat{\Omega}, E)$ is the angular neutron flux, $\Sigma_t$ is the total macroscopic cross section, $\Sigma_s$ is the double-differential scattering cross section, $q$ is a fixed source, and superscript $\dagger$ indicates adjoint quantities.
 
-%Find good wording here to really emphasize adjoint = importance. 
-
-The steady state, fixed-source forms of the forward and adjoint transport equation are:
-
-\begin{align*}
-\bigl[\hat{\Omega} \cdot \nabla + \Macro_t(\vec{r}, E)\bigr] \psi(\vec{r}, \hat{\Omega}, E)  =  \int_0^{\infty} dE' &\int_{4\pi} d\hat{\Omega'} \:\Macro_{s}(\vec{r}, E' \to E, \hat{\Omega'} \cdot \hat{\Omega}) \psi(\vec{r}, \hat{\Omega'}, E') + q(\vec{r}, \vOmega, E) \\
+\begin{align}
+\bigl[\hat{\Omega} \cdot \nabla + \Macro_t(\vec{r}, E)\bigr] \psi(\vec{r}, \hat{\Omega}, E)  =  \int_0^{\infty} dE' &\int_{4\pi} d\hat{\Omega'} \:\Macro_{s}(\vec{r}, E' \to E, \hat{\Omega'} \cdot \hat{\Omega}) \psi(\vec{r}, \hat{\Omega'}, E')\nonumber \\
+ &+ q(\vec{r}, \vOmega, E) \label{eq:forward} \\
 %
-\bigl[-\vOmega \cdot \nabla + \Sigma_t(\rvec, E)\bigr] \psi^{\dagger}(\vec{r}, \vOmega, E) = \int_0^{\infty} dE' &\int_{4\pi} d\vOmega' \: \Sigma_s(\rvec, E \rightarrow E', \vOmega \cdot \vOmega') \psi^{\dagger}(\rvec, \vOmega', E') \\
-&+ q^{\dagger}(\vec{r}, \vOmega, E) \:, 
-\end{align*}
+\bigl[-\vOmega \cdot \nabla + \Sigma_t(\rvec, E)\bigr] \psi^{\dagger}(\vec{r}, \vOmega, E) = \int_0^{\infty} dE' &\int_{4\pi} d\vOmega' \: \Sigma_s(\rvec, E \rightarrow E', \vOmega \cdot \vOmega') \psi^{\dagger}(\rvec, \vOmega', E') \nonumber \\
+&+ q^{\dagger}(\vec{r}, \vOmega, E) \label{eq:adjoint}
+\end{align}
 
-respectively, where $\psi(\vec{r}, \hat{\Omega}, E)$ is the angular neutron flux, $\Sigma_t$ is the total macroscopic cross section, $\Sigma_s$ is the double-differential scattering cross section, $q$ is a fixed source, and superscript $\dagger$ indicates adjoint quantities. 
+%In particular, the adjoint transport equation differs from the forward equation in that particles are scattered up in energy, from E to E', and are reversed in direction, from $\vOmega$ to $\vOmega'$. 
+The key to using the adjoint flux for VR is defining the adjoint source~\cite{wagner_forward-weighted_2007}. 
+Physically, $\psi$ represents how the source particles go forward and affect the rest of the problem space while $\psi^{\dagger}$ represents how the particles from a source come into the solution space and affect the answer. 
+In this way, the angular adjoint flux represents how every part of phase space will influence the answer we are seeking.
+%definition of the adjoint source, $q^{\dagger}$, depends on the nature of the problem being solved. 
+For a simple source-detector problem, for example, $q^\dagger = \Sigma _{ d }$, the detector response function. 
+%Thus, the adjoint particles start at low energy at the detector location, move away from the adjoint source (the detector location), and scatter up in energy. 
 
-In particular, the adjoint transport equation differs from the forward equation in that particles are scattered up in energy, from E to E', and are reversed in direction, from $\vOmega$ to $\vOmega'$. The definition of the adjoint source, $q^{\dagger}$, depends on the nature of the problem being solved. For a simple source-detector problem, we set $q_{e}^\dagger$ to be $\Sigma _{ d }$, or the tally/detector response function for our system. Thus, the adjoint particles start at low energy at the detector location, move away from the adjoint source (the detector location), and scatter up in energy. Physically, $\psi$ represents how the source particles go forward and affect the rest of the problem space; $\psi^{\dagger}$ represents how the particles from a source come into the solution space and affect the answer. In this way, the angular adjoint flux can represent a map of how every part of phase space will influence the answer we are looking for.
-
-In addition to the adjoint flux, another quantity of interest for this project is the contributon flux, the theory of which was pioneered by Williams \cite{williams_generalized_1991,williams_contributorn_1992,williams_contributon_study}. In contributon theory, the pseudo-particle, the \textit{contributon}, is a particle that carries response from the radiation source to a detector. As mentioned previously, the adjoint flux tells the user what the importance of a particle is to a response function. Conversely, the contributon flux tells the user what the importance of a particle is to the solution. Becker's thesis \cite{becker_hybrid_2009} aptly points out that this is illustrated by a source-detector problem, where the forward source has little importance to the adjoint source, but does have importance to the problem solution.
-
-The contributon flux is defined as:
+CADIS-$\Omega$ uses the contributon flux, the theory of which was pioneered by Williams~\cite{williams_generalized_1991,williams_contributorn_1992,williams_contributon_study}. 
+The contributon flux is defined as
+%
 \begin{equation}
-\Psi (\vec {r},\:\hat\Omega ,E) = \psi^{\dagger} (\vec {r},\:\hat\Omega ,E) \psi(\vec {r} ,\:\hat\Omega,E)
+\Psi (\vec {r},\:\hat\Omega ,E) = \psi^{\dagger} (\vec {r},\:\hat\Omega ,E) \psi(\vec {r} ,\:\hat\Omega,E)\:.
 \end{equation}
 \label{eq.Cont-Flux} 
+%
+In contributon theory the pseudo-particle, called the \textit{contributon}, is a particle that carries ``response" from the radiation source to a detector. 
+The contributon flux includes both forward and adjoint information, expressing the importance of a particle to the solution.
+This contains more information than the adjoint flux, which only indicates the importance of a particle to a response function.
+% I do not understand this distinction as it is worded now...can you describe it more clearly?  
+Becker's thesis~\cite{becker_hybrid_2009} aptly points out that this understanding of contributons is illustrated by a source-detector problem, where the forward source has little importance to the adjoint source, but does have importance to the problem solution.
 
-Because contributons are a pseudo-particle for response from the source to the detector, they are useful for studies involving shield design and optimization. In particular, Williams noted that variables relevant to contributon response were useful in determining transport paths through media \cite{williams_contributon_study, williams_SCC_shielding}. A study of the contributon density in a system could enlighten the user on locations where particles would preferentially be transported, and so designers could intelligently choose where to place detectors and material. In this way, one could find the particles most influential to the response of the system. Contributon theory and spatial channel theory have been applied successfully to shielding analyses \cite{seydaliev_contributon_2008, williams_SCC_shielding} due to its ability to incorporate particle response throughout the entire system effectively. 
+Because contributons express response from the source to the detector, they can be useful for studies involving shield design and optimization. 
+%Williams noted that variables relevant to contributon response were useful in determining transport paths through media~\cite{williams_contributon_study, williams_SCC_shielding}. 
+%A study of the contributon density in a system could enlighten the user on locations where particles would preferentially be transported, and so designers could intelligently choose where to place detectors and material. 
+%In this way, one could find the particles most influential to the response of the system. 
+Contributon theory and spatial channel theory have been applied successfully to shielding analyses \cite{seydaliev_contributon_2008, williams_SCC_shielding} because they incorporate particle response throughout the entire system effectively. 
+We are interested in contributons because they include angular information from both the forward and adjoint calculation. % Or some statement that is like this...I think clarifying above will help me understand how to state this. We don't want to talk about contributons as generally but to connect it to VR and this method.
 
 % Come up with good concluding statements here that will help transition to past work section. 
 
@@ -182,7 +199,10 @@ Conclude section with discussion of what is missing from CADIS/FW-CADIS/Angle Me
 \section{METHODOLOGY}
 \label{sect::methodology}
 
-Our proposed addition to the realm of automated hybrid methods attempts to incorporate angular information into the biasing parameters for CADIS and FW-CADIS, while not explicitly biasing by angle. That is, we aim to generate adjusted space- and energy- dependent importance maps that incorporate the flux anisotropy in a more effective way than current implementations. In this section we will describe the mathematical fundamentals of the proposed method, why we believe that they will work for highly anisotropic problems, and reiterate important historical context for the method. Following this discussion, we present a detailed overview of the software we chose to use, and the implementation path to incorporate our method into this software.  \\
+We have seen that past methods are challenged by problems with strong angular anisotropies or have limited use cases.
+We build on past methods but calcualte the adjoint scalar flux in a way that has not been done before.
+Using more angular information should deliver reliable, improved performance for problems in which angular information is particularly important. 
+In this section we describe the theory behind the new method and why we believe it will work for highly anisotropic problems. We also present an overview of the software implementation.  
 
 %------------------------------------------------------------------------------
 %
@@ -190,24 +210,34 @@ Our proposed addition to the realm of automated hybrid methods attempts to incor
 \subsection{Theory}
 \label{subsect::theory}
 
-Both CADIS and FW-CADIS use an adjoint scalar flux to generate biasing parameters for variance reduction. As discussed in Section \ref{sect::second}, the adjoint flux has frequently been cited as a good choice to generate an importance map [REFERENCES]. Physically, this is intuitive, as the importance of a particle near a source contributing to that response should be greater than a particle farther away. Our method (eq. \eqref{eq:angularhybrid} also generates an adjoint scalar flux, but calculates it by weighting the adjoint angular flux by the forward angular flux. 
-
+Our new automated hybrid method incorporates angular information into the biasing parameters for FW/CADIS while not explicitly biasing in angle. 
+That is, we generate space- and energy-dependent importance maps that incorporate the flux anisotropy in a more effective way than current implementations without adding the complication of angular weight windows. 
+Both CADIS and FW-CADIS use an adjoint scalar flux to generate biasing parameters for variance reduction as show in Eqns.~\eqref{}. 
+FW/CADIS-$\Omega$ uses the same equations for weight windows and source biasing; what is different is how we create the adjoint flux. 
+We weight the adjoint angular flux by the forward angular flux, integrate over angle, and divide by the integrated forward angular flux as shown in Eqn.~\eqref{eq:angularhybrid}.
+This quantity, which we designate $\phi^{\dagger}_{\Omega}$, is then used in the FW/CADIS methods.
+%
 \begin{equation} 
-\phi^{+}_{\Omega}(\vec{r},E) = \frac{\int \psi(\vec {r} ,E,\hat{\Omega})\psi^+(\vec {r} ,E,\hat{\Omega})d\hat\Omega }{\int\psi(\vec {r} ,E,\hat{\Omega})d\hat\Omega}
+\phi^{\dagger}_{\Omega}(\vec{r},E) = \frac{\int_{4\pi} \psi(\vec {r} ,E,\hat{\Omega})\psi^+(\vec {r} ,E,\hat{\Omega})d\hat\Omega }{\int_{4\pi}\psi(\vec {r} ,E,\hat{\Omega})d\hat\Omega}
 \label{eq:angularhybrid}
 \end{equation}
 
-This method differs from existing hybrid methods in that it uses a differing quantity than the adjoint scalar flux to generate the biasing parameters. This flux, the flux-$\Omega$ ($\phi^{+}_{\Omega}$), has the same units as the basic adjoint scalar flux, but is weighted differently. In a strongly anisotropic system, the adjoint flux of eq. \eqref{eq:angularhybrid} will be dominated by the adjoint flux quantity in directions of a strong forward-flux direction. In an extremely isotropic system, the $\phi^{+}_{\Omega}$ will be essentially the same quantity as $\phi^{+}$ generated in a deterministic adjoint simulation. In this manner, particles will be preferentially transported in the direction that they will actually be moving, rather than exclusively towards the adjoint source. This should allow for a more effective monte carlo transport, and a more optimized variance reduction. 
+In a strongly anisotropic system, the adjoint scalar flux generated by Eqn.~\eqref{eq:angularhybrid} will be informed by what directions were most prominent in the forward case. 
+Particles will be preferentially transported in the direction that they will actually be moving, rather than exclusively towards the adjoint source. 
+This should allow for more effective Monte Carlo transport when angular effects are important. 
+In an isotropic system, the $\phi^{\dagger}_{\Omega}$ will be essentially the same quantity as $\phi^{\dagger}$ generated in a deterministic adjoint simulation. 
+% is that true?
 
-We can also consider this method from another perspective: the contributon flux ~\cite{williams_contributorn_1992}. The numerator of eq. \eqref{eq:angularhybrid} is identified in the literature as the contributon flux, which, as described in Section \ref{sect::second}, represents the flux of response particles in a system. Contributons, then, are particles that will likely make it from the forward source to the detector to generate a response. An importance map generated by the adjoint flux will differ significantly from a flux generated with a contributon flux map. The importance map from the adjoint flux will merely have greater importance with increasing proximity to the adjoint source, while the imporance map generated from the contributon flux will have strong importances in regions important to both the forward- and adjoint- fluxes. 
-
-The theory behind our proposed method is well-characterized in the literature, and we anticipate this melding of the adjoint- and contributon- fluxes to be beneficial for generating variance reduction parameters in highly anisotropic systems. Furthermore, this variant of the adjoint scalar flux has not been proposed in the literature. To calculate the quantity in eq. \eqref{eq:angularhybrid}, full angular flux maps of both the forward- and adjoint- problems will be required. Further, an extra deterministic calculation (a forward calculation) will be required for CADIS-$\Omega$ calculations.
-
-
-% Discuss how this relates to the concept of importance with the adjoint. \\
-% Discuss how this relates to contributon response. \\
-% Say physically how this helps us track in problems with strong anisotropy. \\
-% Highlight how this is different from past methods.
+We can also consider this method from another perspective: the contributon flux. 
+The numerator of Eqn.~\eqref{eq:angularhybrid} is identified in the contributon flux, which, as described in Section \ref{sect::second}, represents the flux of response particles in a system. 
+Contributons, then, are particles that will likely make it from the forward source to the detector to generate a response. 
+%An importance map generated by the traditional adjoint scalar flux will differ significantly from a flux generated with a contributon flux. 
+An importance map %from the adjoint flux will merely have greater importance with increasing proximity to the adjoint source, while the imporance map generated from 
+%that includes the contributon flux will have strong importances in regions important to both the forward and adjoint angular fluxes. 
+%
+% 
+%To calculate the quantity in eq. \eqref{eq:angularhybrid}, full angular flux maps of both the forward and adjoint problems will be required. 
+%Further, an extra deterministic calculation (a forward calculation) will be required for CADIS-$\Omega$ calculations.
 
 %------------------------------------------------------------------------------
 %
@@ -219,28 +249,27 @@ The theory behind our proposed method is well-characterized in the literature, a
 We implemented the new method through the AutomateD VAriaNce reducTion Generator\\ (ADVANTG)~\cite{wagner_automated_2002, mosher_new_2010} software developed at ORNL. 
 ADVANTG automates the generation of the importance map and biased source distribution created using either the CADIS or FW-CADIS methods for use in MCNP5~\cite{brown_mcnp_2002}. 
 An input file in MCNP syntax is provided by the user in addition to some instructions for running ADVANTG. 
-ADVANTG uses this information to generate input file(s) and exectues the discrete ordinates solver Denovo~\cite{evans_denovo:_2010} in adjoint or forward and adjoint mode, as appropriate.
-The deterministic calculations can be performed using multiple cores and/or processors (e.g., on multi-core desktop systems and clusters). 
-ADVANTG takes Denovo's output, executes the CADIS or FW-CADIS methods, and the final variance reduction parameters are output in a format that can be used with unmodified versions of MCNP. 
-The primary objective of the development of ADVANTG has been to reduce both the user effort and the computational time required to obtain accurate and precise tally estimates
-across a broad range of challenging transport application areas.
+ADVANTG uses this information to exectue the discrete ordinates solver Denovo~\cite{evans_denovo:_2010} and uses the output to create the VR parameters for MCNP.
+%The deterministic calculations can be performed using multiple cores and/or processors (e.g., on multi-core desktop systems and clusters). 
+%ADVANTG takes Denovo's output, executes the CADIS or FW-CADIS methods, and the final variance reduction parameters are output in a format that can be used with unmodified versions of MCNP. 
+%The primary objective of the development of ADVANTG has been to reduce both the user effort and the computational time required to obtain accurate and precise tally estimates across a broad range of challenging transport application areas.
+The main reason we chose this system is the implementation is nearly invisible to the user and therefore the experience of using this method is nearly identical to using CADIS or FW-CADIS.
+This facilitates easy adoption of software that is already easy to use.
 
-We chose to use ADVANTG for several key reasons. 
-The most important is that the implementation is nearly invisible to the user and therefore their experience of using this method will be nearly identical to using CADIS or FW-CADIS.
-That is, the user simply adds an additional instruction asking to use the angle informed method and the interface does not change otherwise.
-This facilitates easy adoption.
-Further, only one MCNP input file is required to compare the new method to FW/CADIS.
-Finally, it was simpler to implement the new method through ADVANTG than starting separately as we could take advantage of so much existing infrastructure in the coupling.
+%That is, the user simply adds an additional instruction asking to use the angle informed method and the interface does not change otherwise.
+%Further, only one MCNP input file is required to compare the new method to FW/CADIS.
+%Finally, it was simpler to implement the new method through ADVANTG than starting separately as we could take advantage of so much existing infrastructure in the coupling.
 
 The major modifications required to implement this method were to Denovo. 
-The angular flux is typically not stored or written as the desired output is typically the scalar flux.
-The new method, however, requires the angular flux to create the scalar flux, and therefore Denovo was modified to store and write the angular flux.
-A new function was also added that takes the forward and adjoint fluxes and performs the integration indicated in eqn.~\eqref{eq:angularhybrid}. 
+The angular flux is typically not stored or written by deterministic solvers as the desired output is typically the scalar flux.
+The new method, however, requires both the forward and adjoint angular fluxes to create the scalar flux. 
+Denovo therefore was modified to store and write the angular flux.
+A new function was also added that performs the integration in Eqn.~\eqref{eq:angularhybrid}. 
 This set of scalar fluxes is then written the same way as any scalar flux output from Denovo.
 
 The benefit the bulk of the implementation being in Denovo is several fold. 
-From the standpoint of ADVANTG, there are very few differences between the new method and FW/CADIS and therefore implementation is straightforward.
-Further, anyone who finds a use for a scalar flux created as in eq.~\eqref{eq:angularhybrid} will now be able  access it.
+From the standpoint of ADVANTG, there are very few differences between the new method and FW/CADIS, making implementation is straightforward.
+Further, anyone who finds a use for a scalar flux created as in Eqn.~\eqref{eq:angularhybrid} will now be able  access it.
 Finally, it might be useful to have access to the full angular flux. 
 Examining the angular flux for a problem could have research or pedagogical implications, and some other variance reduction method that uses the angular flux explicitly could be more easily developed in the future.
 
