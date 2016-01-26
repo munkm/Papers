@@ -124,6 +124,8 @@ In fact, Kalos \cite{kalos_importance_1963, goertzel_monte_1958} and others have
 %
 The steady state, fixed-source forms of the forward and adjoint transport equation are shown in Eqns.~\ref{eq:forward} and \ref{eq:adjoint}, respectively, where $\psi(\vec{r}, \hat{\Omega}, E)$ is the angular neutron flux, $\Sigma_t$ is the total macroscopic cross section, $\Sigma_s$ is the double-differential scattering cross section, $q$ is a fixed source, and superscript $\dagger$ indicates adjoint quantities.
 %
+\begin{subequations} 
+\label{eq:transport}
 \begin{align}
 \bigl[\hat{\Omega} \cdot \nabla + \Macro_t(\vec{r}, E)\bigr] \psi(\vec{r}, \hat{\Omega}, E)  =  \int_0^{\infty} dE' &\int_{4\pi} d\hat{\Omega'} \:\Macro_{s}(\vec{r}, E' \to E, \hat{\Omega'} \cdot \hat{\Omega}) \psi(\vec{r}, \hat{\Omega'}, E')\nonumber \\
  &+ q(\vec{r}, \vOmega, E) \label{eq:forward} \\
@@ -131,6 +133,7 @@ The steady state, fixed-source forms of the forward and adjoint transport equati
 \bigl[-\vOmega \cdot \nabla + \Sigma_t(\rvec, E)\bigr] \psi^{\dagger}(\vec{r}, \vOmega, E) = \int_0^{\infty} dE' &\int_{4\pi} d\vOmega' \: \Sigma_s(\rvec, E \rightarrow E', \vOmega \cdot \vOmega') \psi^{\dagger}(\rvec, \vOmega', E') \nonumber \\
 &+ q^{\dagger}(\vec{r}, \vOmega, E) \label{eq:adjoint}
 \end{align}
+\end{subequations}
 
 %In particular, the adjoint transport equation differs from the forward equation in that particles are scattered up in energy, from E to E', and are reversed in direction, from $\vOmega$ to $\vOmega'$. 
 The key to using the adjoint flux for VR is defining the adjoint source~\cite{wagner_forward-weighted_2007}. 
@@ -162,38 +165,69 @@ In comparison, the adjoint flux places high importance on particles that are clo
 %A study of the contributon density in a system could enlighten the user on locations where particles would preferentially be transported, and so designers could intelligently choose where to place detectors and material. 
 %In this way, one could find the particles most influential to the response of the system. 
 %Contributon theory and spatial channel theory have been applied successfully to shielding analyses \cite{seydaliev_contributon_2008, williams_SCC_shielding} because they incorporate particle response throughout the entire system effectively. 
-
-
 %because they include angular information from both the forward and adjoint calculation. % Or some statement that is like this...I think clarifying above will help me understand how to state this. We don't want to talk about contributons as generally but to connect it to VR and this method.
 
 
 \section{PAST WORK}
 \label{sect::past}
 
-The generation of an effective importance map is a key for a quality automated variance reduction technique. Both adjoint theory and contributon theory have been used to generate variance reduction parameters in deep-penetration radiation shielding problems. Perhaps the most widespread and accessible of these methods is the Consistent, Adjoint-Driven Importance Sampling (CADIS) method, which optimizes monte carlo transport for localized response functions by using 
-Highlight the CADIS method \\
-Highlight the FW-CADIS method \\
-Talk about what problems CADIS and FW-CADIS succeed in, then talk about where they fall short. \\
+The generation of an effective importance map is key for developing quality automated variance reduction techniques. The generation of importance maps has been an active area of research in variance reduction techniques, and a wide variety of approaches to generate them have been investigated. These approaches have utilized aspects of either adjoint theory or contributon theory to gain insight to importance function parameters for deep-penetration radiation shielding problems. Some techniques utilize an initial Monte Carlo estimate of importance, and others utilize a determinstic technique. In this section, we will briefly describe some of the methods utilized to generate biasing parameters for variance reduction techniques, and consider the strengths and weaknesses of each method.
 
-Examples of variance reduction using importance maps include the weight window generator/weight window map (WWG) capability in the MCNP Monte Carlo code~\cite{brown_mcnp_2002}, and the FW/CADIS methods. Target weights in weight window maps are the inverse of the importance values for a given point in phase space.
+As mentioned in section \ref{sect::second}, the likelihood of particles in a cell contributing to a tally can be calculated in a variety of manners. Booth \cite{booth_automatic_1982} showed that the importance of a cell could be estimated with monte carlo by calculating the the total score of particles entering the cell to the total weight of the cell. Concurrently, Hendricks \cite{hendricks_code-generated_1982} developed an automated weight window generator for MCNP~\cite{brown_mcnp_2002} that set weight window bounds for a problem by calculating the total weight entering and exiting the weight window target region, iteratively converging on weight window target values. A great number of other methods exist to iteratively calculate weight window parameters with monte carlo calculations, but in general, target weights in weight window maps are the inverse of the importance values for a given point in phase space.
 
-For problems with very strong anisotropies in the particle flux, such as the streaming found near the air vents of an individual cask or in between casks stored in an array pattern, the importance map and biased source developed using the space/energy treatment above may not represent the real importance well enough to sufficiently accelerate the Monte Carlo calculation. Notice that the angular dependence of the importance function is not retained, because otherwise the map would be very large (tens or hundreds of GB) and more costly and complex to use in the Monte Carlo simulation. 
+Perhaps the most widespread and accessible of methods that utilize a deterministic transport calculation to generate an importance map are the Consistent, Adjoint-Driven Importance Sampling (CADIS) \cite{wagner_automatic_1997,wagner_automated_1998,haghighat_monte_2003} and Forward-Weighted CADIS (FW-CADIS) \cite{wagner_forward-weighted_2007,wagner_forward-weighted_2009,wagner_forward-weighted_2010} methods, which optimize monte carlo transport for localized and global response functions, respectively, by using consistently biased source particles and particle weights. This biasing is done using a determinstic solution for the adjoint scalar flux, $\phi^{\dagger}$. Equations \eqref{eq:CADISmethod} and \eqref{eq:fwCADISmethod} describe the biasing parameters generated by CADIS and FW-CADIS. The biasing parameters used by CADIS are generated from the solution of the adjoint transport equation, where $\phi^{\dagger}$ is obtained from a calculation where $q^\dagger = \Sigma _{ d }$ :
 
-The drawback of this simplification is that, within a given space/energy cell, the map provides the average importance of a particle moving in any direction through the cell—excluding information about how particles move toward the objective. Consider the simple labyrinth example shown in Figure 1. For a source at the left entrance, the dose rate inside and outside of the labyrinth ranges over 12 orders of magnitude. Analog Monte Carlo would have to sample trillions of particles to get a few to the lowest dose regions. The space/energy treatment used in FW-CADIS makes this problem tractable but challenging. For particles near the turns in the labyrinth, the importance of the particles to the exit of the labyrinth vary greatly if they are coming out of a wall pointed toward the exit versus heading into a wall and away from the exit. This distinction is not captured by current hybrid methods. Including angular information in the importance map should significantly improve the Monte Carlo run time. 
+\begin{subequations} 
+\label{eq:CADISmethod} 
+\begin{equation}
+\hat{q}  = \frac{\phi^{\dagger}(\vec {r} ,E)q(\vec {r} ,E)}{\iint\phi^+(\vec {r} ,E)q(\vec {r} ,E) dE d\vec{r}} \\
+         = \frac{\phi^{\dagger}(\vec {r} ,E)q(\vec {r} ,E)}{R}
+\label{eq:weightedsource}
+\end{equation}
+\begin{equation}
+w_0  = \frac{q}{\hat{q}} \\
+     = \frac{R}{\phi^{\dagger}(\vec {r} ,E)} 
+\label{eq:startingweight}
+\end{equation}
+\begin{equation}
+\hat{w} = \frac{R}{\phi^{\dagger}(\vec {r} ,E)} 
+\label{eq:WW}
+\end{equation}
+\end{subequations}
 
-Introduce angle-informed and angle-biased methods. \\
-Higlight AVATAR + shortcomings \\
-Highlight Turner \& Larsen's method + shortcomings\\
 
-To do fast, accurate transport for used fuel monitoring, what is needed is an importance map generated quickly using deterministic methods that captures the impact of angle in the importance information. A variety of strategies for accomplishing this goal have been tried over the years. One such method is the Local Importance Function Transform (LIFT) method [10], which is derived from the zero-variance method and  uses an approximation of the adjoint flux that is piecewise continuous in angle. LIFT only captures linearly anisotropic scattering, which is not enough for our needs and is somewhat difficult to use [11].
+Where $\hat{q}$ is the biased source distribution, $w_0$ is the starting weight of the particles, $\hat{w}$ is the target weight of the particles, and R is the response of interest.
 
-More recently, an attempt by Peplow et al. [12] to solve this problem used the maximum entropy distribution [13] to approximate the angular adjoint flux, , and showed improvement in some problems but very little in others. In that work, the angular component of the adjoint flux was approximated as separable and symmetric about the average adjoint current direction. We will refer to this method as simple angular CADIS. Two versions were implemented, one with (limited) directional source biasing and one without. The method without source biasing is effectively the method used by the AVATAR [14] code on a Cartesian mesh and on a tet-mesh in a code by Evans and Wareing [13]. 
+While CADIS is quite effective at reducing the variance in localized responses, FW-CADIS was developed to reduce the variance in global responses. The concept behind FW-CADIS is that if the response function can have an even number of particles sampled in each phase-space region, then the uncertainty distribution will be even across the global response tally. Rather than setting  $q^\dagger = \Sigma _{ d }$, FW-CADIS generates a $q^\dagger$ based on a deterministic forward calculation (equations \eqref{eq:energy_space_flux}-\eqref{eq:total_doserate}). This $q^\dagger$ is used to solve the adjoint equation, and then source biasing and particle weights are adjusted with the same methods described in equations \eqref{eq:weightedsource}-\eqref{eq:WW}.
 
-In Peplow et al.’s work, the improvement using simple angular CADIS over standard CADIS ranged from a factor of 0.09 to 3.3 over a collection of eight test problems, many of which have characteristics similar to used fuel cask monitoring systems. In all cases, CADIS and simple angular CADIS outperformed analog Monte Carlo. Peplow et al.’s study demonstrated that in many cases in which anisotropies are important, including angular information will improve calculation efficiency. However, these results also showed that the simple angular CADIS implementation is not accurate enough to provide the improvement necessary to be able to efficiently execute the used fuel cask calculations we would like to perform to improve facility monitoring design and operation. We therefore need to develop a better method for capturing the angular information.  
-	
+\begin{subequations} 
+\label{eq:fwCADISmethod}
+Biasing Parameters Used by FW-CADIS: 
+To calculate the energy and spatial dependent flux, $\phi(\vec{r},E)$ :
+\begin{equation}
+q^{+}  = \frac {1}{\phi(\vec{r},E)}
+\label{eq:energy_space_flux}
+\end{equation}
+To calculate spatially dependent total flux, $\int\phi(\vec{r},E)dE$ :
+\begin{equation}
+q^{+}  = \frac {1}{\int\phi(\vec{r},E)dE}
+\label{eq:total_flux}
+\end{equation}
+To calculate spatially dependent total flux, $\int\phi(\vec{r},E)\sigma_d(\vec{r},E)dE$ :
+\begin{equation}
+q^{+}  = \frac {\sigma_d(\vec{r},E)}{\int\phi(\vec{r},E)\sigma_d(\vec{r},E)dE}
+\label{eq:total_doserate}
+\end{equation}
+\end{subequations}
 
+For problems with very strong anisotropies in the particle flux, the importance map and biased source developed using the space/energy treatment above may not represent the real importance well enough to sufficiently accelerate the Monte Carlo calculation. Notice that because the scalar adjoint flux is used in Eqns.~\eqref{eq:CADISmethod} and \eqref{eq:fwCADISmethod}, the angular dependence of the importance function is not retained. The drawback of using scalar flux quantities to calculate these parameters is that no information is retained on how particles move towards the response function. However, the angular dependence of the importance function were retained, the map would be very large (tens or hundreds of GB) and more costly and complex to use in the Monte Carlo simulation. It is noteworthy that the automatic weight window generator in MCNP does have the capability of angular biasing. For some problems, this generator works well, but it requires iteration and inherently depends on Monte Carlo for weighting parameters, which is limited by statistical precision and may take time.
 
-Conclude section with discussion of what is missing from CADIS/FW-CADIS/Angle Methods to motivate new method. \\
+A variety of methods have incorporated angular information, to some degree, into deterministically-informed Monte Carlo variance reduction. Of note are the AVATAR \cite{van_riper_avatarautomatic_1997} and Local Importance Function Transform (LIFT) \cite{turner_automatic_1997} methods. The LIFT method uses an approximation of the adjoint flux that is piecewise continuous in angle. However, LIFT only captured linearly anisotropic scattering \cite{turner_automatic_1997-1}, which is not suitable for all types of strongly anisotropic systems. The AVATAR method, which is an implementation of the maximum entropy distribution, assumes that the flux is separable and symmetric about the average current. While AVATAR does generate biased weight windows, they are not consistently biased with the source distribution (while those in CADIS and FW-CADIS are). Neither LIFT nor AVATAR perform well in voids and low-density regions \cite{turner_automatic_1997-1}. 
+
+More recently, Peplow et al. \cite{peplow_consistent_2012}, built off of AVATAR by consistenly biasing the source distribution. In this work, the Peplow et al. created an angular version of CADIS both with limited directional source biasing and without directional source biasing. These methods performed well compared to the analog, but were not sufficiently accurate in capturing angular information to scale to complex problems with strong anisotropies. 
+
+In summary, a great amount of work has been performed to generate variance reduction parameters for deep penetration shielding problems with Monte Carlo. These methods generate biasing functions or weight window maps from calculated importance functions. Some methods iteratively converge on cell importances with Monte Carlo, which work well for a large problem subset. However, Monte Carlo-generated importances struggle in deep-penetration problems as strongly shielded regions prevent sufficient sampling to generate accurate variance reduction paramaters. Other methods utilize deterministic calculations to generate variance reduction parameters. In this realm, both CADIS and FW-CADIS perform well for large, symmetric, or deep-penetration problems. However, CADIS and FW-CADIS struggle in problems where there are strong anisotropies in the flux. Work has been performed to generate variance reduction parameters with angular information, but these methods are either not automated, have limited accessibility, have limited applications, or struggle to capture the anisotropy for large-scale systems. 
+
 
 %------------------------------------------------------------------------------
 %
@@ -203,7 +237,7 @@ Conclude section with discussion of what is missing from CADIS/FW-CADIS/Angle Me
 
 We have seen that past methods are challenged by problems with strong angular anisotropies or have limited use cases.
 We build on past methods but calcualte the adjoint scalar flux in a way that has not been done before.
-Using more angular information should deliver reliable, improved performance for problems in which angular information is particularly important. 
+Using more angular information should improve performance and increase reliability for problems in which angular information is particularly important. 
 In this section we describe the theory behind the new method and why we believe it will work for highly anisotropic problems. We also present an overview of the software implementation.  
 
 %------------------------------------------------------------------------------
@@ -214,7 +248,7 @@ In this section we describe the theory behind the new method and why we believe 
 
 Our new automated hybrid method incorporates angular information into the biasing parameters for FW/CADIS while not explicitly biasing in angle. 
 That is, we generate space- and energy-dependent importance maps that incorporate the flux anisotropy in a more effective way than current implementations without adding the complication of angular weight windows. 
-Both CADIS and FW-CADIS use an adjoint scalar flux to generate biasing parameters for variance reduction as shown in Eqns.~\eqref{}. 
+Both CADIS and FW-CADIS use an adjoint scalar flux to generate biasing parameters for variance reduction as shown in Eqns.~\eqref{eq:CADISmethod} and \eqref{eq:fwCADISmethod}. 
 FW/CADIS-$\Omega$ uses the same equations for weight windows and source biasing; what is different is how we create the adjoint flux. 
 We weight the adjoint angular flux by the forward angular flux, integrate over angle, and divide by the integrated forward angular flux as shown in Eqn.~\eqref{eq:angularhybrid}.
 This quantity, which we designate $\phi^{\dagger}_{\Omega}$, is then used in the FW/CADIS methods.
