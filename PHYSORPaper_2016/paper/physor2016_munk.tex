@@ -16,6 +16,14 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepgflibrary{shapes.geometric}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
 
 \usepackage{booktabs}
 
@@ -205,19 +213,19 @@ While CADIS is quite effective at reducing the variance in localized responses, 
 \begin{subequations} 
 \label{eq:fwCADISmethod}
 Biasing parameters Used by FW-CADIS: 
-To calculate the energy and spatial dependent flux, $\phi(\vec{r},E)$ :
+To calculate the energy and spatially dependent flux, $\phi(\vec{r},E)$ :
 \begin{equation}
-q^{+}  = \frac {1}{\phi(\vec{r},E)}
+q^{\dagger}  = \frac {1}{\phi(\vec{r},E)}
 \label{eq:energy_space_flux}
 \end{equation}
-To calculate spatially dependent total flux, $\int\phi(\vec{r},E)dE$ :
+To calculate spatially dependent flux, $\int\phi(\vec{r},E)dE$ :
 \begin{equation}
-q^{+}  = \frac {1}{\int\phi(\vec{r},E)dE}
+q^{\dagger}  = \frac {1}{\int\phi(\vec{r},E)dE}
 \label{eq:total_flux}
 \end{equation}
-To calculate spatially dependent total flux, $\int\phi(\vec{r},E)\sigma_d(\vec{r},E)dE$ :
+To calculate spatially dependent dose in the system, $\int\phi(\vec{r},E)\sigma_d(\vec{r},E)dE$ :
 \begin{equation}
-q^{+}  = \frac {\sigma_d(\vec{r},E)}{\int\phi(\vec{r},E)\sigma_d(\vec{r},E)dE}
+q^{\dagger}  = \frac {\sigma_d(\vec{r},E)}{\int\phi(\vec{r},E)\sigma_d(\vec{r},E)dE}
 \label{eq:total_doserate}
 \end{equation}
 \end{subequations}
@@ -257,7 +265,7 @@ We first take the product of the adjoint angular flux by the forward angular flu
 This quantity, which we designate $\phi^{\dagger}_{\Omega}$, is then used in the FW/CADIS methods.
 %
 \begin{equation} 
-\phi^{\dagger}_{\Omega}(\vec{r},E) = \frac{\int_{4\pi} \psi(\vec {r} ,E,\hat{\Omega})\psi^+(\vec {r} ,E,\hat{\Omega})d\hat\Omega }{\int_{4\pi}\psi(\vec {r} ,E,\hat{\Omega})d\hat\Omega}
+\phi^{\dagger}_{\Omega}(\vec{r},E) = \frac{\int_{4\pi} \psi(\vec {r} ,E,\hat{\Omega})\psi^{\dagger}(\vec {r} ,E,\hat{\Omega})d\hat\Omega }{\int_{4\pi}\psi(\vec {r} ,E,\hat{\Omega})d\hat\Omega}
 \label{eq:angularhybrid}
 \end{equation}
 
