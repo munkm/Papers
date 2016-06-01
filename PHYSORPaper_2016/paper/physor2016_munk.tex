@@ -338,13 +338,13 @@ Examining the angular flux for a problem could have research or pedagogical impl
 To begin to characterize the performance of CADIS-$\Omega$ we chose to study a Labyrinth source-detector problem.
 Such labyrinth problems contain some angle dependence that is not well captured by standard CADIS~\cite{peplow_consistent_2012}. 
 The motivation for this initial test is to investigate the differences between CADIS and CADIS-$\Omega$.
-We also performed an analog calculation, comparing  the tally result, the relative uncertainty, and the MC figure of merit (FOM) of the response tally of all three methods.
+We also performed an analog calculation, comparing  the tally result, the relative uncertainty, and the MC figure of merit (FOM) of the response tally of the methods.
 The FOM is given below, where we used the average relative error of the tally total.
 %
 \[\text{FOM} = \frac{1}{(\text{calculation time})*(\text{average relative error})^2}\:. \]
 
-All MCNP calculations used 10,000,000 particles, an f4 tally for the total reaction rate in the NaI detector, and energy bins matching the bounds of the library used by Denovo. 
-Denovo used the 27g19n shielding cross section library (a library included in the ADVANTG software distribution), a step characteristic (SC) spatial solver, quadruple range (QR) quadrature with four azimuthal and four polar angles per octant, a $P_N$ order of 2, and 135,000 spatial cells.% In ADVANTG, the quadruple range quadrature is set with four azimuthal and four polar angles per octant, and a default quadrature order of 10.
+All MCNP calculations used 10,000,000 particles, an f4 tally for the total reaction rate in the NaI detector (using a path length estimator), and energy bins matching the bounds of the library used by Denovo. 
+Denovo used the 27g19n shielding cross section library (a library included in the ADVANTG software distribution), a step characteristic (SC) spatial solver, quadruple range (QR) quadrature with four azimuthal and four polar angles per octant, a $P_N$ order of 3, and 135,000 spatial voxels.% In ADVANTG, the quadruple range quadrature is set with four azimuthal and four polar angles per octant, and a default quadrature order of 10.
 
 \begin{figure}
   \begin{center}
@@ -353,21 +353,21 @@ Denovo used the 27g19n shielding cross section library (a library included in th
   \end{center}
 \end{figure}
 % the axes and labels are really hard to read 
-Figure~\ref{fig::fwdflux} shows the problem geometry overlaid on a forward deterministic flux map. The labyrinth is comprised of a concrete shield, a 10 MeV isotropic point source at (-75, 0, 50), and a 10 cm cubic NaI detector on the other side of the shield centered at (75, -15, 50). The edges of the problem have reflective boundary conditions, and the cross section libraries for MCNP were continuous energy. 
+Figure~\ref{fig::fwdflux} shows the problem geometry overlaid on a forward deterministic flux map. The labyrinth is comprised of a concrete shield, a 10 MeV isotropic point source at (-75, 0, 50), and a 10x10x10 cm cubic NaI detector on the other side of the shield centered at (75, -15, 50). The edges of the problem have vacuum boundary conditions, and the cross section libraries for MCNP were continuous energy. 
 
-The deterministic portion of the CADIS method took 57.4 minutes and CADIS-$\Omega$ took 116.44 minutes, both on a single core of a 3 GHz Intel Core i7 processor. The MC runtimes for the analog, CADIS, and CADIS-$\Omega$ were 64, 386, and 367 minutes, respectively, on a single, 20-core node of Intel Xeon E5-2670, resulting in FOMs of 493, 8.2, and 466, respectively. These results are summarized in Table \ref{tab:FOMLabI}. In observing the adjusted FOM values, one should note that the system that performed the deterministic calculations was different than that of the MC calculations. 
+The deterministic portion of the CADIS method took 41.5 minutes and CADIS-$\Omega$ took 83.0 minutes, both on a single core of a 3 GHz Intel Core i7 processor. The MC runtimes for the analog, CADIS, and CADIS-$\Omega$ were 64, 483.4, and 408.9 minutes, respectively, on a single, 20-core node of Intel Xeon E5-2670, resulting in FOMs of 493, 5.1, and 145.0, respectively. These results are summarized in Table \ref{tab:FOMLabI}. In observing the adjusted FOM values, one should note that the system that performed the deterministic calculations was different than that of the MC calculations. 
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.49\textwidth]{./images/response.png}
-    \includegraphics[width=0.49\textwidth]{./images/response_RE.png}
+    \includegraphics[width=0.49\textwidth]{./images/maze2_response_p3q10.png}
+    \includegraphics[width=0.49\textwidth]{./images/maze2_RE_p3q10.png}
     \caption[]{\label{fig::tallyresponse} Responses (left) and relative uncertainties (right) in NaI detector tally for the Labyrinth problem. }
   \end{center}
 \end{figure}
 % Axes aren't great, hard to read the CADIS line
 % These need error bars if possible, otherwise it is very difficult to compare
 
-The tally responses and relative uncertainties for the NaI detector in the Labyrinth problem are shown in Fig.~\ref{fig::tallyresponse} for the analog, CADIS, and CADIS-$\Omega$ methods.  CADIS-$\Omega$ has a lower relative error than CADIS for lower energy bins, but a higher relative error for higher energy bins. The relative error for CADIS-$\Omega$ appears to be uniformly low. Comparatively, CADIS has the highest relative errors of all three methods at low neutron energies, but the lowest relative error for the highest energies. Not unsurprisingly, the analog response had the highest uncertainty in the energy bins with the lowest response. Adding error bars on the response plot of Figure~\ref{fig::tallyresponse} obscured the data. In general, the responses are equivalent to within one standard deviation. This is not the case at low energies, where none of the methods lie within one standard deviation of each other, and CADIS lies well outside of the bounds of both the analog and CADIS-$\Omega$ methods. 
+The tally responses and relative uncertainties for the NaI detector in the Labyrinth problem are shown in Fig.~\ref{fig::tallyresponse} for the analog, CADIS, and CADIS-$\Omega$ methods.  CADIS-$\Omega$ has a lower relative error than CADIS for lower energy bins, but a slightly higher relative error for higher energy bins. The relative error for CADIS-$\Omega$ appears to be uniformly low. Comparatively, CADIS has the highest relative errors of all three methods at low neutron energies, but the lowest relative error for the highest energies. Not unsurprisingly, the analog response had the highest uncertainty in the energy bins with the lowest response. Adding error bars on the response plot of Figure~\ref{fig::tallyresponse} obscured the data. In general, the responses are equivalent to within one standard deviation. This is not the case at low energies, where none of the methods lie within one standard deviation of each other, and CADIS lies well outside of the bounds of both the analog and CADIS-$\Omega$ methods. 
 To facilitate comparison, the relative difference between the CADIS and CADIS-$\Omega$ responses and the analog response is shown in Fig.~\ref{fig::rediffs}. 
 
 By separating the detector response into the scalar flux and the response function ($\Sigma_{T}$), shown in Fig.~\ref{fig::tallyproducts}, we gain some insight as to why the results in the low energy region are in disagreement.
@@ -376,7 +376,7 @@ The source of this discrepancy merits further investigation.
 % Not sure if this rearrangement is better, but I think it puts the discussions closer to the figures?
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.49\textwidth]{./images/RE_differences.png}
+    \includegraphics[width=0.49\textwidth]{./images/maze2_relative_diff_p3q10.png}
     \caption[]{\label{fig::rediffs} Relative differences between the CADIS and CADIS-$\Omega$ responses and the analog response. For scale, the analog relative error is also included. }
   \end{center}
 \end{figure}
@@ -394,27 +394,30 @@ Note that in these figures the color scales are not the same between groups so t
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.80\textwidth]{./images/maze2_adjoint_group26_adjusted.png}
-    \includegraphics[width=0.80\textwidth]{./images/maze2_myflux_group26_adjusted.png}
+    \includegraphics[width=0.80\textwidth]{./images/maze2_adjoint_group26_adjusted_update.png}
+    \includegraphics[width=0.80\textwidth]{./images/maze2_myflux_group26_adjusted_update.png}
     \caption[]{\label{fig::adjoint_fluxes_group26} Group 26 adjoint flux generated by standard Denovo (top) and the CADIS-$\Omega$ method (bottom).}
   \end{center}
 \end{figure}
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=0.80\textwidth]{./images/maze2_adjoint_group11_adjusted.png}
-    \includegraphics[width=0.80\textwidth]{./images/maze2_myflux_group11_adjusted.png}
+    \includegraphics[width=0.80\textwidth]{./images/maze2_adjoint_group11_adjusted_update.png}
+    \includegraphics[width=0.80\textwidth]{./images/maze2_myflux_group11_adjusted_update.png}
     \caption[]{\label{fig::adjoint_fluxes_group11} Group 11 adjoint flux generated by standard Denovo (top) and the CADIS-$\Omega$ method (bottom).}
   \end{center}
 \end{figure}
 
-In group 26, CADIS-$\Omega$ creates an adjoint flux in which the majority of the group 26 neutrons that contribute to the detector response are reflected off of the back and bottom walls, while the standard adjoint indicates fairly symmetric contribution. 
+In group 26, CADIS-$\Omega$ creates an adjoint flux in which the majority of the group 26 neutrons that contribute to the detector response are those that exit the channel in the small angle between the shield and the detector, while the standard adjoint indicates fairly symmetric contribution. 
+% are reflected off of the back and bottom walls, 
+% while the standard adjoint indicates  fairly symmetric contribution. 
 This illustrates that CADIS-$\Omega$ captures angular information differently than CADIS. 
 We expect the shape of the CADIS map given the non-inclusion of angular information. 
-The CADIS-$\Omega$ map seems to be strongly dominated by the reflecting behavior in the bottom right of the problem, indicating a more locally anisotropic behavior. This is likely due to the high probability of absorption of low energy neutrons in the shield. That is, low energy neutrons that are reflected off of the wall into the shield have a much lower survival probability than higher energy neutrons, like those in group 11. As a result, only the group 26 neutrons reflected directly towards the detector will contribute to the response, resulting in a locally anisotropic response-generating flux. 
+The CADIS-$\Omega$ map seems to be strongly dominated by the streaming behavior of the particles between the shield and the detector in the right half of the problem, indicating a locally anisotropic behavior in this region. This is likely due to the lack of scattering reactions off of air for neutrons in this region. As particles travel beyond the detector, their probability for inducing a response decreases as their probability for exiting the problem increases. The decrease in particle importance near the problem boundaries is consistent with what has been observed for the contributon flux. Further, the importance of low energy neutrons contributing to the detector response drops off sharply shortly into the shield. This is likely due to the high probability of absorption of low energy neutrons into the shield. That is, low energy neutrons that are in the shield have a much lower survival probability than higher energy neutrons, like those in group 11. 
+As a result, the majority of the group 26 neutrons that stream directly towards the detector once exiting the channel will contribute to the response, resulting in a locally anisotropic response-generating flux. 
 
-This asymmetric effect in the CADIS-$\Omega$ case is not as prominent in group 11. 
-Unlike group 26, the group 11 neutrons are far more likely to survive an interaction with the shield. As a result, the response-generating flux of group 11 has a similar probability to be from the reflective wall or the shield, resulting in a more locally-isotropic flux near the detector volume. Therefore, the group 11 CADIS-$\Omega$ adjoint fluxes more closely match the adjoint fluxes generated by CADIS. 
+This asymmetric effect in the CADIS-$\Omega$ case exists, but is not as prominent in group 11. 
+Unlike group 26, the group 11 neutrons are far more likely to survive an interaction with the shield. As a result, the response-generating flux of group 11 has a similar probability to be either from streaming out of the channel or from exiting the shield, resulting in a more locally-isotropic flux near the detector volume. As a result, a much greater portion of the shield contains particles of high importance to the detector response. Therefore, the group 11 CADIS-$\Omega$ adjoint flux is less dominated by the streaming behavior of particles exiting the channel. 
 % Great description in both paragraphs!
 
  \begin{table}
@@ -424,9 +427,9 @@ Unlike group 26, the group 11 neutrons are far more likely to survive an interac
     \toprule
         & FOM$_{MC}$ & FOM$_{adjusted}$ & T$_{MC}$ (minutes) & T$_{determinstic}$ (minutes) \\
     \hline
-    Analog           & 493   &  493     & 64.95      & 0.00 \\ 
-    CADIS            & 8.2   &  7.1     & 386.18     & 57.4  \\
-    CADIS-$\Omega$   & 466   &  353.88  & 367.42     & 116.4  \\  
+    Analog           & 493   &  493     & 64.9      & 0.00 \\ 
+    CADIS            & 5.1   &  ---     & 483.4     & 41.5  \\
+    CADIS-$\Omega$   & 145.0 &  -----   & 408.9     & 83.0  \\  
 	\bottomrule
   \end{tabular}
 \end{table}
@@ -435,7 +438,7 @@ As mentioned previously, Table \ref{tab:FOMLabI} reports FOMs using the Monte Ca
 Because CADIS-$\Omega$ uses two deterministic transport calculations while CADIS uses one, incorporating the increased time for the calculation is necessary for a fair comparison.
 It is worth noting that FW-CADIS-$\Omega$ and FW-CADIS would no longer have this discrepancy in deterministic calculation time.
 
-The FOMs reported in Table \ref{tab:FOMLabI} reveal the significant effect that the high relative errors on low energy bin responses had on the FOM for CADIS. Because the low energy bins had a high response cross section in addition to a high flux, these bins strongly affected the FOM for CADIS. The large difference in flux anisotropy near the detector in Fig.~\ref{fig::adjoint_fluxes_group26} may also explain this. The biasing parameters generated by CADIS are encouraging the MC calculation to spend equal calculation power splitting and rouletting for all directions entering the detector even though the flux is most likely to reflect off of the wall to generate a response. As a result, CADIS spends more time tracking in regions that do not contribute to the solution. Conversely, CADIS-$\Omega$ does capture this behavior, suggesting it will perform well for problems with strong, local angular anisotropy.  
+The FOMs reported in Table \ref{tab:FOMLabI} reveal the significant effect that the high relative errors on low energy bin responses had on the FOM for CADIS. Because the low energy bins had a high response cross section in addition to a high flux, these bins strongly affected the FOM for CADIS. The large difference in flux anisotropy near the detector in Fig.~\ref{fig::adjoint_fluxes_group26} may also explain this. The biasing parameters generated by CADIS are encouraging the MC calculation to spend equal calculation power splitting and rouletting for all directions entering the detector even though the flux is most likely to stream directly from the channel to generate a response. As a result, CADIS spends more time tracking in regions that do not contribute to the solution. Conversely, CADIS-$\Omega$ does capture this behavior, suggesting it will perform well for problems with strong, local angular anisotropy.  
 
 % We need to mention the comparison to analog. Here's a shot at expalaining; tweak as necessary. 
 It is noteworthy that, for this problem, analog MC produced a higher FOM than either VR method. 
