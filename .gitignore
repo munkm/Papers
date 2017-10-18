@@ -21,4 +21,4 @@ srctp*
 .cecache*
 build/
 PDFs/
-Makefile
+compile/
